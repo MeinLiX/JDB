@@ -14,7 +14,7 @@ namespace JDBSource.Interfaces
         Task AddTable(string tableName);
         Task RemoveTables(List<ITable<IModel>> tables);
 
-        Task<ITable<IModel>> GetTable(string tableName);
-        Task<List<ITable<IModel>>> GetTables();
+        ITable<IModel> GetTable(string tableName);
+        List<ITable<IModel>> GetTables();
     }
 }

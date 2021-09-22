@@ -1,8 +1,6 @@
 ﻿using JDBSource.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace JDBSource
@@ -10,20 +8,56 @@ namespace JDBSource
     public class Scheme : IScheme
     {
         private List<ITable<IModel>> Tables { get; set; } = new();
-        private IDatabase Database { get; set; }
-        private string SchemeName { get; set; }
 
-        #region ICommon
-        string ICommon.GetName() => SchemeName
-                                    ?? throw new NullReferenceException();
+        private IDatabase _database;
+        private IDatabase Database
+        {
+            get => _database
+                    ?? throw new NullReferenceException();
 
-        string ICommon.SetName(string name) =>
-            SchemeName = name switch
+            set => _database = value switch
             {
-                not null => name,
-                null => throw new ArgumentNullException()
+                not null => value,
+                null => throw new NullReferenceException()
             };
+        }
+
+        private string _schemeName;
+        private string SchemeName
+        {
+            get => _schemeName
+                    ?? throw new NullReferenceException();
+
+            set => _schemeName = value switch
+            {
+                not null => value,
+                null => throw new NullReferenceException()
+            };
+        }
+
+        #region Constructors
+
+        public Scheme(string schemeName) => SchemeName = schemeName;
+
+        public Scheme(string schemeName, IDatabase database)
+        : this(schemeName)
+        {
+            Database = database;
+        }
+
         #endregion
+
+        #region Internal
+        
+        string ICommon.GetName() => SchemeName;
+        void ICommon.SetName(string name) => SchemeName = name;
+
+        IDatabase IScheme.GetDB() => Database;
+        void IScheme.SetDB(IDatabase database) => Database = database;
+
+        #endregion
+
+        public string GetSuffix() => "_Scheme";
 
         public Task AddTable(ITable<IModel> table)
         {
@@ -35,15 +69,12 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        IDatabase IScheme.GetDB() => Database
-                                    ?? throw new NullReferenceException();
-
-        public Task<ITable<IModel>> GetTable(string tableName)
+        public ITable<IModel> GetTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<ITable<IModel>>> GetTables()
+        public List<ITable<IModel>> GetTables()
         {
             throw new NotImplementedException();
         }
@@ -57,14 +88,5 @@ namespace JDBSource
         {
             throw new NotImplementedException();
         }
-
-        void IScheme.SetDB(IDatabase database) =>
-            Database = database switch
-            {
-                not null => database,
-                null => throw new ArgumentNullException()
-            };
-
-
     }
 }

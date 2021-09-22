@@ -9,20 +9,61 @@ namespace JDBSource
     public class Table<Model> : ITable<Model> where Model : IModel
     {
         private DBList<Model> Models { get; set; } = new();
-        private IScheme Scheme { get; set; }
-        private string TableName { get; set; }
 
-        #region ICommon
-        string ICommon.GetName() => TableName
-                                    ?? throw new NullReferenceException();
+        private IScheme _scheme;
+        private IScheme Scheme
+        {
+            get => _scheme
+                    ?? throw new NullReferenceException();
 
-        string ICommon.SetName(string name) =>
-            TableName = name switch
+            set => _scheme = value switch
             {
-                not null => name,
-                null => throw new ArgumentNullException()
+                not null => value,
+                null => throw new NullReferenceException()
             };
+        }
+
+        private string _tableName;
+        private string TableName
+        {
+            get => _tableName
+                    ?? throw new NullReferenceException();
+
+            set => _tableName = value switch
+            {
+                not null => value,
+                null => throw new NullReferenceException()
+            };
+        }
+
+        #region Constructor
+        public Table()
+        {
+
+        }
+
+        public Table(string name)
+        {
+            TableName = name;
+        }
+        public Table(string name, List<Model> models)
+            :this(name)
+        {
+            Models.AddRange(models);
+        }
         #endregion
+
+        #region Internal
+
+        string ICommon.GetName() => TableName;
+        void ICommon.SetName(string name) => TableName = name;
+
+        IScheme ITable<Model>.GetScheme() => Scheme;
+        void ITable<Model>.SetScheme(IScheme scheme) => Scheme = scheme;
+
+        #endregion
+
+        public string GetSuffix() => ".db.json";
 
         public Task AddModel(Model model)
         {
@@ -44,14 +85,6 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        void ITable<Model>.SetScheme(IScheme scheme) =>
-            Scheme = scheme switch
-            {
-                not null => scheme,
-                null => throw new ArgumentNullException()
-            };
 
-        IScheme ITable<Model>.GetScheme() => Scheme
-                                      ?? throw new NullReferenceException();
     }
 }

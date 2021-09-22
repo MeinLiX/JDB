@@ -1,9 +1,9 @@
 ﻿using JDBSource.Interfaces;
+using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace JDBSource
@@ -11,8 +11,32 @@ namespace JDBSource
     public class Database : IDatabase
     {
         private List<IScheme> Schemes { get; set; } = new();
-        private string DatabaseName { get; set; }
-        private string FullPath { get; set; }
+
+        private string _databaseName;
+        private string DatabaseName
+        {
+            get => _databaseName ?? throw new NullReferenceException();
+
+            //FullPath = FullPath; TODO: cut old name and rename dirr
+            set => _databaseName = value switch
+            {
+                not null => value,
+                null => throw new NullReferenceException()
+            };
+        }
+
+        private string _fullPath;
+        private string FullPath
+        {
+            get => _fullPath ?? throw new NullReferenceException();
+
+            set =>
+                _fullPath = value switch
+                {
+                    not null => value + @$"\{DatabaseName}",
+                    null => Environment.CurrentDirectory + @$"\{DatabaseName}"
+                };
+        }
 
         #region Constructors
         public Database()
@@ -21,26 +45,21 @@ namespace JDBSource
 
         public Database(string databaseName, string path = null)
         {
-            DatabaseName = databaseName ?? "MyDatabase";
-            FullPath = path switch
-            {
-                not null => path + @$"\{DatabaseName}",
-                null => Environment.CurrentDirectory + @$"\{DatabaseName}"
-            };
+            DatabaseName = databaseName;
+            FullPath = path;
         }
         #endregion
 
-        #region ICommon
-        string ICommon.GetName() => DatabaseName
-                                    ?? throw new NullReferenceException();
+        #region Internal
 
-        string ICommon.SetName(string name) =>
-            DatabaseName = name switch
-            {
-                not null => name,
-                null => throw new ArgumentNullException()
-            };
+        string ICommon.GetName() => DatabaseName;
+        void ICommon.SetName(string name) => DatabaseName = name;
+
         #endregion
+
+        public string GetSuffix() => "_JDB";
+
+        public string GetPath() => FullPath;
 
         public async Task<IDatabase> OpenConnection()
         {
@@ -50,7 +69,14 @@ namespace JDBSource
             if (!File.Exists(FullPath + $@"\{DatabaseName}.option.db.json")) //todo
                 File.Create(FullPath + $@"\{DatabaseName}.option.db.json");
 
-
+            try
+            {
+                Schemes.AddRange(JReader.ReadSchemes(this));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             return this;
         }
@@ -60,19 +86,66 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        public Task AddScheme(string schemeName)
+        public List<IScheme> GetSchemes() => Schemes;
+
+        public Task<IScheme> AddScheme(string schemeName)
         {
-            throw new NotImplementedException();
+            _ = schemeName ?? throw new ArgumentNullException();
+
+            return AddScheme(new Scheme(schemeName, this));
         }
 
-        public Task AddScheme(IScheme scheme)
+        public async Task<IScheme> AddScheme(IScheme scheme)
         {
-            throw new NotImplementedException();
+            _ = scheme ?? throw new ArgumentNullException();
+
+            /*if (Schemes.Where(s => s.GetName() == scheme.GetName()).Any())
+                throw new Exception("Name already exists.");*/
+
+            scheme.SetDB(this);
+
+            Schemes.Add(scheme);
+
+            try
+            {
+                JWriter.WriteScheme(scheme);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR]:{ex.Message}");
+                Schemes.Remove(scheme);
+            }
+
+
+            return scheme;
         }
 
-        public Task RemoveScheme(List<IScheme> schemes)
+
+        public async Task<int> RemoveScheme(List<IScheme> schemes)
         {
-            throw new NotImplementedException();
+            int deletedCount = 0;
+
+            schemes = new(schemes);
+
+            schemes.ForEach(schemeToDelete =>
+            {
+                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetDB() == this);
+                if (scheme != null)
+                {
+                    Schemes.Remove(scheme);
+                    try
+                    {
+                        JWriter.DeleteScheme(scheme);
+                        deletedCount++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ERROR]:{ex.Message}");
+                    }
+                }
+            });
+
+            return deletedCount;
         }
     }
 }

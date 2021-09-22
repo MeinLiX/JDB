@@ -5,11 +5,17 @@ namespace JDBSource.Interfaces
 {
     public interface IDatabase : ICommon
     {
+        string GetPath();
+
         Task<IDatabase> OpenConnection();
         Task<IDatabase> CloseConnection();
 
-        Task AddScheme(string schemeName);
-        Task AddScheme(IScheme scheme);
-        Task RemoveScheme(List<IScheme> schemes);
+        Task<IScheme> AddScheme(string schemeName);
+        Task<IScheme> AddScheme(IScheme scheme);
+        Task<int> RemoveScheme(List<IScheme> schemes);
+
+        List<IScheme> GetSchemes();
+
+        //Task Save();
     }
 }
