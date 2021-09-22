@@ -3,15 +3,16 @@ using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
-    interface ITable
+    public interface ITable<model> : ICommon where model : IModel
     {
-        
+        internal void SetScheme(IScheme scheme);
+        internal IScheme GetScheme();
 
-        Task AddModels(List<IModel> models);
-        Task AddModel(IModel model);
+        Task AddModels(List<model> models);
+        Task AddModel(model model);
 
-        IDBList<IModel> GetModels(int count);//like first
-        Task<IModel> GetModel(ulong ID);
-        Task<IModel> GetModel(IModel model);
+        IDBList<model> GetModels(); // use linq
+
+        Task RemoveModels(List<model> models);
     }
 }

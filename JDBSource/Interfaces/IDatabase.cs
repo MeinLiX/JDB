@@ -1,13 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
-    interface IDatabase
+    public interface IDatabase : ICommon
     {
         Task<IDatabase> OpenConnection();
         Task<IDatabase> CloseConnection();
 
+        Task AddScheme(string schemeName);
         Task AddScheme(IScheme scheme);
-        Task RemoveScheme(IScheme scheme);
+        Task RemoveScheme(List<IScheme> schemes);
     }
 }

@@ -6,33 +6,52 @@ using System.Threading.Tasks;
 
 namespace JDBSource
 {
-    class Table : ITable
+    public class Table<Model> : ITable<Model> where Model : IModel
     {
-        private DBList<IModel> Models { get; set; } = new();
+        private DBList<Model> Models { get; set; } = new();
+        private IScheme Scheme { get; set; }
+        private string TableName { get; set; }
 
-        public Task AddModel(IModel model)
+        #region ICommon
+        string ICommon.GetName() => TableName
+                                    ?? throw new NullReferenceException();
+
+        string ICommon.SetName(string name) =>
+            TableName = name switch
+            {
+                not null => name,
+                null => throw new ArgumentNullException()
+            };
+        #endregion
+
+        public Task AddModel(Model model)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddModels(List<IModel> models)
+        public Task AddModels(List<Model> models)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IModel> GetModel(ulong ID)
+        public IDBList<Model> GetModels()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IModel> GetModel(IModel model)
+        public Task RemoveModels(List<Model> models)
         {
             throw new NotImplementedException();
         }
 
-        public IDBList<IModel> GetModels(int count)
-        {
-            throw new NotImplementedException();
-        }
+        void ITable<Model>.SetScheme(IScheme scheme) =>
+            Scheme = scheme switch
+            {
+                not null => scheme,
+                null => throw new ArgumentNullException()
+            };
+
+        IScheme ITable<Model>.GetScheme() => Scheme
+                                      ?? throw new NullReferenceException();
     }
 }

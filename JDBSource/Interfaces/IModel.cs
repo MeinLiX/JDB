@@ -1,6 +1,6 @@
 ﻿namespace JDBSource.Interfaces
 {
-    interface IModel
+    public interface IModel
     {
         ulong ID { get; set; }
     }
