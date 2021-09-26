@@ -52,10 +52,11 @@ namespace JDBSource
 
         #region Internal
 
-        string ICommon.GetName() => DatabaseName;
         void ICommon.SetName(string name) => DatabaseName = name;
 
         #endregion
+
+        public string GetName() => DatabaseName;
 
         public string GetSuffix() => "_JDB";
 

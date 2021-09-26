@@ -1,13 +1,15 @@
 ﻿using JDBSource.Interfaces;
+using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace JDBSource
 {
     public class Scheme : IScheme
     {
-        private List<ITable<IModel>> Tables { get; set; } = new();
+        private List<object> Tables { get; set; } = new();
 
         private IDatabase _database;
         private IDatabase Database
@@ -48,8 +50,7 @@ namespace JDBSource
         #endregion
 
         #region Internal
-        
-        string ICommon.GetName() => SchemeName;
+
         void ICommon.SetName(string name) => SchemeName = name;
 
         IDatabase IScheme.GetDB() => Database;
@@ -57,36 +58,66 @@ namespace JDBSource
 
         #endregion
 
+        public string GetName() => SchemeName;
+
         public string GetSuffix() => "_Scheme";
 
-        public Task AddTable(ITable<IModel> table)
+        public async Task<ITable<model>> AddTable<model>(ITable<model> table)
+            where model : IModel
         {
-            throw new NotImplementedException();
+            _ = table ?? throw new ArgumentNullException();
+
+            table.SetScheme(this);
+
+            try
+            {
+                JWriter.UpdateTable(table);
+                Tables.Add(table);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR]:{ex.Message}");
+            }
+
+            return table;
         }
 
-        public Task AddTable(string tableName)
+        public Task<ITable<model>> AddTable<model>(string tableName)
+            where model : IModel
         {
-            throw new NotImplementedException();
+            _ = tableName ?? throw new ArgumentNullException();
+
+            return AddTable(new Table<model>(tableName, this));
         }
 
-        public ITable<IModel> GetTable(string tableName)
-        {
-            throw new NotImplementedException();
-        }
+        public ITable<model> GetTable<model>(string tableName)
+            where model : IModel
+            => Tables.FirstOrDefault(t => (t as ITable<model>).GetName() == tableName) as ITable<model>;
 
         public List<ITable<IModel>> GetTables()
+            => Tables.Select(t => t as ITable<IModel>).ToList();
+
+        public Task RemoveTables<model>(List<ITable<model>> tables)
+            where model : IModel
         {
-            throw new NotImplementedException();
+            tables.ForEach(t => Tables.Remove(t.GetName()));
+
+            //Save(); todo?: bolean arg
+
+            return Task.CompletedTask;
         }
 
-        public Task RemoveTables(List<ITable<IModel>> tables)
+        public async Task<IScheme> Save()
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IScheme> Save()
-        {
-            throw new NotImplementedException();
+            try
+            {
+                JWriter.UpdateTables(GetTables());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[ERROR]:{e.Message}");
+            }
+            return this;
         }
     }
 }

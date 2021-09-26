@@ -1,4 +1,5 @@
 ﻿using JDBSource.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -21,24 +22,25 @@ namespace JDBSource.Source.Stream
                     .ToList();
 
                 schemes.ForEach(schem => ReadTables(schem)
-                                        .ForEach(table => schem
-                                                          .AddTable(table)));
+                                        .ForEach(async table => await schem.AddTable(table)));
                 return schemes;
             }
             catch { throw; }
         }
 
-        public static ITable<IModel> ReadTable([NotNull] string name, [NotNull] IScheme scheme)
+        public static ITable<IModel> ReadTable([NotNull] string path, [NotNull] IScheme scheme)
         {
             try
             {
-                string pathDirr = @$"{JStream.GetPath(scheme)}\{name}";
-                using StreamReader r = new(pathDirr);
+                if (!path.Contains(".db.json"))
+                    return null;
+
+                using StreamReader r = new(path);
                 string json = r.ReadToEnd();
-                List<IModel> models = JsonSerializer.Deserialize<List<IModel>>(json);
-                return new Table<IModel>(name.Split(".db.json")?[0], models);
+                List<IModel> models = JsonSerializer.Deserialize<List<IModel>>(json); //TODO
+                return new Table<IModel>(path.Split(".db.json")?[0].Split("/")[^1], models);
             }
-            catch { }
+            catch {}
             return null;
         }
 

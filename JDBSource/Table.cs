@@ -1,14 +1,14 @@
 ﻿using JDBSource.Interfaces;
-using JDBSource.Source;
+using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JDBSource
 {
-    public class Table<Model> : ITable<Model> where Model : IModel
+    public class Table<model> : ITable<model> where model : IModel
     {
-        private DBList<Model> Models { get; set; } = new();
+        private List<model> Models { get; set; } = new();
 
         private IScheme _scheme;
         private IScheme Scheme
@@ -46,45 +46,64 @@ namespace JDBSource
         {
             TableName = name;
         }
-        public Table(string name, List<Model> models)
-            :this(name)
+        public Table(string name, List<model> models)
+            : this(name)
         {
-            Models.AddRange(models);
+            AddModels(models);
+        }
+
+        public Table(string name, IScheme scheme)
+            : this(name)
+        {
+            Scheme = scheme;
         }
         #endregion
 
         #region Internal
 
-        string ICommon.GetName() => TableName;
         void ICommon.SetName(string name) => TableName = name;
 
-        IScheme ITable<Model>.GetScheme() => Scheme;
-        void ITable<Model>.SetScheme(IScheme scheme) => Scheme = scheme;
+        IScheme ITable<model>.GetScheme() => Scheme;
+        void ITable<model>.SetScheme(IScheme scheme) => Scheme = scheme;
 
         #endregion
 
+        public string GetName() => TableName;
         public string GetSuffix() => ".db.json";
 
-        public Task AddModel(Model model)
+        public Task AddModel(model model) => AddModels(new List<model>() { model });
+
+        public Task AddModels(List<model> models)
         {
-            throw new NotImplementedException();
+            //todo validation;
+            Models.AddRange(models);
+            return Task.CompletedTask;
         }
 
-        public Task AddModels(List<Model> models)
+        public List<model> GetModels() => Models
+                                              ?? throw new NullReferenceException();
+
+        public Task RemoveModels(List<model> models)
         {
-            throw new NotImplementedException();
+            models.ForEach(m => Models.Remove(m));
+
+            //Save(); todo?: bolean arg
+
+            return Task.CompletedTask;
         }
 
-        public IDBList<Model> GetModels()
+        public async Task<ITable<model>> Save()
         {
-            throw new NotImplementedException();
+            try
+            {
+                JWriter.UpdateTable(this);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[ERROR]:{e.Message}");
+            }
+            return this;
         }
-
-        public Task RemoveModels(List<Model> models)
-        {
-            throw new NotImplementedException();
-        }
-
 
     }
 }

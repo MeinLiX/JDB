@@ -9,7 +9,7 @@ namespace JDBSource.Interfaces
     public interface ICommon
     {
         string GetSuffix();
-        internal string GetName();
+        string GetName();
         internal void SetName(string name);
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace JDBSource.Source.Stream
@@ -54,6 +55,33 @@ namespace JDBSource.Source.Stream
             try
             {
                 schemes.ForEach(scheme => DeleteScheme(scheme));
+            }
+            catch { throw; }
+        }
+
+        public static void UpdateTable<model>([NotNull] ITable<model> table)
+            where model : IModel
+        {
+            try
+            {
+                string dirrTable = $@"{JStream.GetPath(table.GetScheme())}\{table.GetName()}.db.json";
+
+                if (File.Exists(dirrTable))
+                    File.Delete(dirrTable);
+
+                //File.Create(dirrTable);
+                string modelsJson = JsonSerializer.Serialize(table.GetModels());
+                File.WriteAllText(dirrTable, modelsJson);
+            }
+            catch { throw; }
+        }
+
+        public static void UpdateTables<model>([NotNull] List<ITable<model>> tables)
+            where model : IModel
+        {
+            try
+            {
+                tables.ForEach(table => UpdateTable(table));
             }
             catch { throw; }
         }

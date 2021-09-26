@@ -5,13 +5,15 @@ namespace JDBSource.Interfaces
 {
     public interface ITable<model> : ICommon where model : IModel
     {
+        Task<ITable<model>> Save();
+
         internal void SetScheme(IScheme scheme);
         internal IScheme GetScheme();
 
         Task AddModels(List<model> models);
         Task AddModel(model model);
 
-        IDBList<model> GetModels(); // use linq
+        List<model> GetModels(); // use linq
 
         Task RemoveModels(List<model> models);
     }
