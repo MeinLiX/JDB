@@ -1,4 +1,5 @@
 ﻿using JDBSource.Interfaces;
+using JDBSource.Source;
 using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace JDBSource
         #endregion
 
         public string GetName() => TableName;
-        public string GetSuffix() => ".db.json";
+        public string GetSuffix() =>FileTypes.Table_suffix.Get();
 
         public Task AddModel(model model) => AddModels(new List<model>() { model });
 

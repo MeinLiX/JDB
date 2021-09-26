@@ -1,4 +1,5 @@
 ﻿using JDBSource.Interfaces;
+using JDBSource.Source;
 using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace JDBSource
 
         public string GetName() => SchemeName;
 
-        public string GetSuffix() => "_Scheme";
+        public string GetSuffix() => FileTypes.Scheme_suffix.Get();
 
         public async Task<ITable<model>> AddTable<model>(ITable<model> table)
             where model : IModel

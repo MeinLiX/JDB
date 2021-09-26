@@ -1,4 +1,5 @@
 ﻿using JDBSource.Interfaces;
+using JDBSource.Source;
 using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace JDBSource
 
         public string GetName() => DatabaseName;
 
-        public string GetSuffix() => "_JDB";
+        public string GetSuffix() => FileTypes.DB_suffix.Get();
 
         public string GetPath() => FullPath;
 
@@ -67,8 +68,8 @@ namespace JDBSource
             if (!Directory.Exists(FullPath))
                 Directory.CreateDirectory(FullPath);
 
-            if (!File.Exists(FullPath + $@"\{DatabaseName}.option.db.json")) //todo
-                File.Create(FullPath + $@"\{DatabaseName}.option.db.json");
+            if (!File.Exists(FullPath + $@"\{DatabaseName}{FileTypes.DB_config.Get()}")) //todo
+                File.Create(FullPath + $@"\{DatabaseName}{FileTypes.DB_config.Get()}");
 
             try
             {
