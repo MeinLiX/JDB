@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JDBSource.viruals
+namespace JDBSource.Abstracts
 {
     public abstract class BaseRow : IRow
     {

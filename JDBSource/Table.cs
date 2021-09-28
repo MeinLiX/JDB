@@ -1,7 +1,7 @@
 ﻿using JDBSource.Interfaces;
 using JDBSource.Source;
 using JDBSource.Source.Stream;
-using JDBSource.viruals;
+using JDBSource.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
