@@ -3,18 +3,26 @@ using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
-    public interface ITable<model> : ICommon where model : IModel
+    public interface ITable : ICommon 
     {
-        Task<ITable<model>> Save();
+        Task<ITable> Save();
+        Task<ITable> LoadOptions();
 
         internal void SetScheme(IScheme scheme);
         internal IScheme GetScheme();
 
-        Task AddModels(List<model> models);
-        Task AddModel(model model);
+        Task AddRow(List<IRow> rows);
+        Task AddRow<model>(List<model> row); //Reflection
 
-        List<model> GetModels(); // use linq
+        Task AddRow(IRow row);
+        Task AddRow<model>(model row); //Reflection
 
-        Task RemoveModels(List<model> models);
+        List<IRow> GetRows();
+        List<model> GetRows<model>(); //Reflection
+
+        Task RemoveRows(List<IRow> rows);
+        Task RemoveRows<model>(List<model> rows);//Reflection
+
+        bool CheckType(string value, string type);
     }
 }

@@ -10,16 +10,12 @@ namespace JDBSource.Interfaces
         internal void SetDB(IDatabase database);
         internal IDatabase GetDB();
 
-        Task<ITable<model>> AddTable<model>(ITable<model> table)
-            where model : IModel;
-        Task<ITable<model>> AddTable<model>(string tableName)
-            where model : IModel;
+        Task<ITable> AddTable(ITable table);
+        Task<ITable> AddTable(string tableName);
 
-        Task RemoveTables<model>(List<ITable<model>> tables)
-            where model : IModel;
+        Task RemoveTables(List<ITable> tables);
 
-        ITable<model> GetTable<model>(string tableName)
-            where model : IModel;
-        List<ITable<IModel>> GetTables();
+        ITable GetTable(string tableName);
+        List<ITable> GetTables();
     }
 }

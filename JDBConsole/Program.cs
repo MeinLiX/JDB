@@ -15,7 +15,7 @@ namespace JDBConsole
         static async Task Main(string[] args)
         {
             Console.Title = ConsoleTitle;
-            Database database = new("super-test");
+            Database database = new("super-test2");
             await database.OpenConnection();
 
             await database.RemoveScheme(database.GetSchemes());
@@ -30,12 +30,12 @@ namespace JDBConsole
             IScheme myDBscheme = database.GetSchemes()
                                         .First(s => s.GetName() == SchemeNames[0]);
 
-            ITable<User> ut = myDBscheme.GetTable<User>(myDBscheme.GetName()); 
+            ITable ut = myDBscheme.GetTable(myDBscheme.GetName()); 
 
 
             Console.WriteLine($"TABLE({ut.GetName()}{Environment.NewLine})");
             Console.WriteLine($"ID\t Name {Environment.NewLine})");
-            ut.GetModels().ForEach(m => Console.WriteLine($"{m.ID}\t {m.Name} {Environment.NewLine}"));
+            ut.GetRows().ForEach(m => Console.WriteLine($"{m.GetColumnValue("_id")}\t {m.GetColumnValue("Name")} {Environment.NewLine}"));
         }
 
         private static async Task testStart(Database database)
@@ -46,28 +46,24 @@ namespace JDBConsole
             IScheme myDBscheme = database.GetSchemes()
                                          .First(s => s.GetName() == SchemeNames[0]);
 
-            ITable<User> ut = await myDBscheme.AddTable<User>("User");
+            ITable ut = await myDBscheme.AddTable("User");
 
-            await ut.AddModel(new User(1,"test1"));
-            await ut.AddModel(new User(2,"test2"));
-            await ut.AddModel(new User(3,"test3"));
+            //await ut.AddModel(new User(1,"test1"));
 
             await ut.Save();
         }
 
-        public class User : IModel
+        public class User 
         {
-            public ulong ID { get; set; }
             public string Name { get; set; }
 
             public User()
             {
-
+                 
             }
 
-            public User(ulong id, string name)
+            public User(string name)
             {
-                ID = id;
                 Name = name;
             }
         }

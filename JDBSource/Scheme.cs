@@ -10,7 +10,7 @@ namespace JDBSource
 {
     public class Scheme : IScheme
     {
-        private List<object> Tables { get; set; } = new();
+        private List<ITable> Tables { get; set; } = new();
 
         private IDatabase _database;
         private IDatabase Database
@@ -63,16 +63,16 @@ namespace JDBSource
 
         public string GetSuffix() => FileTypes.Scheme_suffix.Get();
 
-        public async Task<ITable<model>> AddTable<model>(ITable<model> table)
-            where model : IModel
+        public async Task<ITable> AddTable(ITable table)
         {
+            throw new NotImplementedException();
             _ = table ?? throw new ArgumentNullException();
 
             table.SetScheme(this);
 
             try
             {
-                JWriter.UpdateTable(table);
+                //JWriter.UpdateTable(table);
                 Tables.Add(table);
             }
             catch (Exception ex)
@@ -83,25 +83,21 @@ namespace JDBSource
             return table;
         }
 
-        public Task<ITable<model>> AddTable<model>(string tableName)
-            where model : IModel
+        public Task<ITable> AddTable(string tableName)
         {
+            throw new NotImplementedException();
             _ = tableName ?? throw new ArgumentNullException();
 
-            return AddTable(new Table<model>(tableName, this));
+            //return AddTable(new Table(tableName, this));
         }
 
-        public ITable<model> GetTable<model>(string tableName)
-            where model : IModel
-            => Tables.FirstOrDefault(t => (t as ITable<model>).GetName() == tableName) as ITable<model>;
+        public ITable GetTable(string tableName) => Tables.FirstOrDefault(t => t.GetName() == tableName);
 
-        public List<ITable<IModel>> GetTables()
-            => Tables.Select(t => t as ITable<IModel>).ToList();
+        public List<ITable> GetTables() => Tables.ToList();
 
-        public Task RemoveTables<model>(List<ITable<model>> tables)
-            where model : IModel
+        public Task RemoveTables(List<ITable> tables)
         {
-            tables.ForEach(t => Tables.Remove(t.GetName()));
+            tables.ForEach(t => Tables.Remove(t));
 
             //Save(); todo?: bolean arg
 
@@ -112,7 +108,8 @@ namespace JDBSource
         {
             try
             {
-                JWriter.UpdateTables(GetTables());
+                throw new NotImplementedException();
+                //JWriter.UpdateTables(GetTables());
             }
             catch (Exception e)
             {

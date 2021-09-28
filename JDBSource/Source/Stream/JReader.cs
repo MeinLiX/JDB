@@ -21,13 +21,12 @@ namespace JDBSource.Source.Stream
                     .Select(scheme => new Scheme(scheme.Split("_")[^2].Split("\\")[^1], database))
                     .ToList();
 
-                schemes.ForEach(schem => ReadTables(schem)
-                                        .ForEach(async table => await schem.AddTable(table)));
                 return schemes;
             }
             catch { throw; }
         }
 
+        /*
         public static ITable<IModel> ReadTable([NotNull] string path, [NotNull] IScheme scheme)
         {
             try
@@ -44,7 +43,7 @@ namespace JDBSource.Source.Stream
             return null;
         }
 
-        public static List<ITable<IModel>> ReadTables([NotNull] IScheme scheme)
+        public static List<ITable<IModel>> ReadTablesWitoutData([NotNull] IScheme scheme)
         {
             try
             {
@@ -64,6 +63,22 @@ namespace JDBSource.Source.Stream
             catch { throw; }
         }
 
-
+        public static ITable<model> ReadTable<model>([NotNull]ITable<model> table)
+            where model : IModel
+        {
+            try
+            {
+                IScheme sheme = table.GetScheme();
+                string path = $@"{JStream.GetPath(sheme)}\{table.GetName()}\.db.json";
+               
+                using StreamReader r = new(path);
+                string json = r.ReadToEnd();
+                List<model> models = JsonSerializer.Deserialize<List<model>>(json); //TODO
+                return new Table<model>(path.Split(".db.json")?[0].Split("/")[^1], models);
+            }
+            catch { }
+            return null;
+        }
+        */
     }
 }

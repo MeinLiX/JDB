@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace JDBSource
 {
-    public class Table<model> : ITable<model> where model : IModel
+    public class Table : ITable
     {
-        private List<model> Models { get; set; } = new();
+        private List<IRow> Rows { get; set; } = new();
+        private Dictionary<string,string> ColumnTypes { get; set; } = new();
 
         private IScheme _scheme;
         private IScheme Scheme
@@ -47,10 +48,10 @@ namespace JDBSource
         {
             TableName = name;
         }
-        public Table(string name, List<model> models)
+        public Table(string name, List<IRow> rows)
             : this(name)
         {
-            AddModels(models);
+            
         }
 
         public Table(string name, IScheme scheme)
@@ -64,40 +65,41 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => TableName = name;
 
-        IScheme ITable<model>.GetScheme() => Scheme;
-        void ITable<model>.SetScheme(IScheme scheme) => Scheme = scheme;
+        IScheme ITable.GetScheme() => Scheme;
+        void ITable.SetScheme(IScheme scheme) => Scheme = scheme;
 
         #endregion
 
         public string GetName() => TableName;
         public string GetSuffix() =>FileTypes.Table_suffix.Get();
 
-        public Task AddModel(model model) => AddModels(new List<model>() { model });
+        public Task AddRow(IRow row) => AddRow(new List<IRow>() { row });
 
-        public Task AddModels(List<model> models)
+        public Task AddRow(List<IRow> rows)
         {
             //todo validation;
-            Models.AddRange(models);
+            Rows.AddRange(rows);
             return Task.CompletedTask;
         }
 
-        public List<model> GetModels() => Models
+        public List<IRow> GetRows() => Rows
                                               ?? throw new NullReferenceException();
 
-        public Task RemoveModels(List<model> models)
+        public Task RemoveRows(List<IRow> rows)
         {
-            models.ForEach(m => Models.Remove(m));
+            rows.ForEach(m => Rows.Remove(m));
 
             //Save(); todo?: bolean arg
 
             return Task.CompletedTask;
         }
 
-        public async Task<ITable<model>> Save()
+        public async Task<ITable> Save()
         {
+            throw new NotImplementedException();
             try
             {
-                JWriter.UpdateTable(this);
+                //JWriter.UpdateTable(this);
             }
             catch (Exception e)
             {
@@ -106,5 +108,34 @@ namespace JDBSource
             return this;
         }
 
+        public Task<ITable> LoadOptions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckType(string value, string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddRow<model>(List<model> row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddRow<model>(model row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<model> GetRows<model>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveRows<model>(List<model> rows)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

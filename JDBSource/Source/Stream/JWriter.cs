@@ -58,7 +58,7 @@ namespace JDBSource.Source.Stream
             }
             catch { throw; }
         }
-
+        /*
         public static void UpdateTable<model>([NotNull] ITable<model> table)
             where model : IModel
         {
@@ -85,6 +85,6 @@ namespace JDBSource.Source.Stream
             }
             catch { throw; }
         }
-
+        */
     }
 }
