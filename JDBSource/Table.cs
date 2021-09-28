@@ -1,6 +1,7 @@
 ﻿using JDBSource.Interfaces;
 using JDBSource.Source;
 using JDBSource.Source.Stream;
+using JDBSource.viruals;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace JDBSource
 {
     public class Table : ITable
     {
-        private List<IRow> Rows { get; set; } = new();
+        private List<BaseRow> Rows { get; set; } = new();
         private Dictionary<string,string> ColumnTypes { get; set; } = new();
 
         private IScheme _scheme;
@@ -48,7 +49,7 @@ namespace JDBSource
         {
             TableName = name;
         }
-        public Table(string name, List<IRow> rows)
+        public Table(string name, List<BaseRow> rows)
             : this(name)
         {
             
@@ -73,19 +74,19 @@ namespace JDBSource
         public string GetName() => TableName;
         public string GetSuffix() =>FileTypes.Table_suffix.Get();
 
-        public Task AddRow(IRow row) => AddRow(new List<IRow>() { row });
+        public Task AddRow(BaseRow row) => AddRow(new List<BaseRow>() { row });
 
-        public Task AddRow(List<IRow> rows)
+        public Task AddRow(List<BaseRow> rows)
         {
             //todo validation;
             Rows.AddRange(rows);
             return Task.CompletedTask;
         }
 
-        public List<IRow> GetRows() => Rows
+        public List<BaseRow> GetRows() => Rows
                                               ?? throw new NullReferenceException();
 
-        public Task RemoveRows(List<IRow> rows)
+        public Task RemoveRows(List<BaseRow> rows)
         {
             rows.ForEach(m => Rows.Remove(m));
 

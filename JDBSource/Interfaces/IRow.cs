@@ -10,7 +10,9 @@ namespace JDBSource.Interfaces
         bool HaveColumn(string columnName);
 
         string GetColumnValue(string columnName);
-        string SetColumnValue(string columnName, string value);
+        bool TryGetColumnValue(string columnName, out string value);
+
+        void SetColumnValue(string columnName, string value);
 
         bool CheckType(string value, string type) => GetUE().CheckType(value, type);
     }
