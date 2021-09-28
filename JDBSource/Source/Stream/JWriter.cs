@@ -64,7 +64,7 @@ namespace JDBSource.Source.Stream
         {
             try
             {
-                string dirrTable = $@"{JStream.GetPath(table.GetScheme())}\{table.GetName()}.db.json";
+                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}.db.json";
 
                 if (File.Exists(dirrTable))
                     File.Delete(dirrTable);

@@ -3,18 +3,15 @@ using System;
 
 namespace JDBSource.Interfaces
 {
-    public interface IRow
+    public interface IRow : IUpperEnviroment<ITable>
     {
-        Guid _id { get; set; }
-
-        internal void SetTable(ITable scheme);
-        internal ITable GetTable();
+        string _id { get; set; }
 
         bool HaveColumn(string columnName);
 
         string GetColumnValue(string columnName);
         string SetColumnValue(string columnName, string value);
 
-        bool CheckType(string value, string type) => GetTable().CheckType(value, type);
+        bool CheckType(string value, string type) => GetUE().CheckType(value, type);
     }
 }

@@ -3,13 +3,10 @@ using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
-    public interface ITable : ICommon 
+    public interface ITable : ICommon, IUpperEnviroment<IScheme>
     {
         Task<ITable> Save();
         Task<ITable> LoadOptions();
-
-        internal void SetScheme(IScheme scheme);
-        internal IScheme GetScheme();
 
         Task AddRow(List<IRow> rows);
         Task AddRow<model>(List<model> row); //Reflection

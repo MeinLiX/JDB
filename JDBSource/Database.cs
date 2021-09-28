@@ -104,7 +104,7 @@ namespace JDBSource
             /*if (Schemes.Where(s => s.GetName() == scheme.GetName()).Any())
                 throw new Exception("Name already exists.");*/
 
-            scheme.SetDB(this);
+            scheme.SetUE(this);
 
             Schemes.Add(scheme);
 
@@ -131,7 +131,7 @@ namespace JDBSource
 
             schemes.ForEach(schemeToDelete =>
             {
-                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetDB() == this);
+                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetUE() == this);
                 if (scheme != null)
                 {
                     Schemes.Remove(scheme);

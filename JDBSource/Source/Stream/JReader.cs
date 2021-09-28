@@ -68,7 +68,7 @@ namespace JDBSource.Source.Stream
         {
             try
             {
-                IScheme sheme = table.GetScheme();
+                IScheme sheme = table.GetUE();
                 string path = $@"{JStream.GetPath(sheme)}\{table.GetName()}\.db.json";
                
                 using StreamReader r = new(path);

@@ -65,8 +65,8 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => TableName = name;
 
-        IScheme ITable.GetScheme() => Scheme;
-        void ITable.SetScheme(IScheme scheme) => Scheme = scheme;
+        IScheme IUpperEnviroment<IScheme>.GetUE() => Scheme;
+        void IUpperEnviroment<IScheme>.SetUE(IScheme scheme) => Scheme = scheme;
 
         #endregion
 

@@ -11,7 +11,7 @@ namespace JDBSource.Source.Stream
 {
     class JStream
     {
-        public static string GetPath([NotNull] IScheme scheme) => $@"{scheme.GetDB().GetPath()}\{scheme.GetName()}{scheme.GetSuffix()}";
+        public static string GetPath([NotNull] IScheme scheme) => $@"{scheme.GetUE().GetPath()}\{scheme.GetName()}{scheme.GetSuffix()}";
 
     }
 }

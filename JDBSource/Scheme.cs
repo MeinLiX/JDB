@@ -54,8 +54,8 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => SchemeName = name;
 
-        IDatabase IScheme.GetDB() => Database;
-        void IScheme.SetDB(IDatabase database) => Database = database;
+        IDatabase IUpperEnviroment<IDatabase>.GetUE() => Database;
+        void IUpperEnviroment<IDatabase>.SetUE(IDatabase database) => Database = database;
 
         #endregion
 
@@ -68,7 +68,7 @@ namespace JDBSource
             throw new NotImplementedException();
             _ = table ?? throw new ArgumentNullException();
 
-            table.SetScheme(this);
+            table.SetUE(this);
 
             try
             {
