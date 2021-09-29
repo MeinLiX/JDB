@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace JDBSource
 {
-    public class Table : ITable
+    public class Table : ITableWithReflectionAddition
     {
         private List<BaseRow> Rows { get; set; } = new();
         private Dictionary<string,string> ColumnTypes { get; set; } = new();
@@ -114,7 +114,12 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        public bool CheckType(string value, string type)
+        public Task<ITable> SetOptions(List<(string, string)> optionModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ITable> SetOptions<model>(model optionModel)
         {
             throw new NotImplementedException();
         }
@@ -135,6 +140,21 @@ namespace JDBSource
         }
 
         public Task RemoveRows<model>(List<model> rows)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckType(string value, string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ValidRow(BaseRow row)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ValidRow<model>(model row)
         {
             throw new NotImplementedException();
         }
