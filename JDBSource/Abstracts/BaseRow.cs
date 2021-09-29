@@ -13,6 +13,7 @@ namespace JDBSource.Abstracts
 
             set => SetColumnValue("_id", value);
         }
+
         private Dictionary<string, string> Colums { get; set; }
 
         private ITable _table;
@@ -27,6 +28,20 @@ namespace JDBSource.Abstracts
                 null => throw new NullReferenceException()
             };
         }
+
+        #region Constructor
+        public BaseRow()
+        {
+
+        }
+        #endregion
+
+        #region Internal
+
+        ITable IUpperEnviroment<ITable>.GetUE() => Table;
+        void IUpperEnviroment<ITable>.SetUE(ITable table) => Table = table;
+
+        #endregion
 
         public bool HaveColumn(string columnName) => TryGetColumnValue(columnName, out _);
 
@@ -49,13 +64,9 @@ namespace JDBSource.Abstracts
             }
             else
             {
-                Colums.Add(columnName, value);
+                throw new NullReferenceException();
             }
         }
-
-        ITable IUpperEnviroment<ITable>.GetUE() => Table;
-
-        void IUpperEnviroment<ITable>.SetUE(ITable table) => Table = table;
 
         private string[] GetColumsName()
         {
@@ -97,5 +108,7 @@ namespace JDBSource.Abstracts
 
             return false;
         }
+
+        public Dictionary<string, string> GetAsDictionary() => new Dictionary<string, string>(Colums);
     }
 }

@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JDBSource.Interfaces
 {
@@ -15,5 +15,7 @@ namespace JDBSource.Interfaces
         void SetColumnValue(string columnName, string value);
 
         bool CheckType(string value, string type) => GetUE().CheckType(value, type);
+
+        Dictionary<string, string> GetAsDictionary();
     }
 }
