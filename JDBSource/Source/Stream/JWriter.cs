@@ -1,13 +1,10 @@
 ﻿using JDBSource.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace JDBSource.Source.Stream
 {
@@ -58,33 +55,49 @@ namespace JDBSource.Source.Stream
             }
             catch { throw; }
         }
-        /*
-        public static void UpdateTable<model>([NotNull] ITable<model> table)
-            where model : IModel
+
+        public static void UpdateTableOptions(Table table, Dictionary<string, string> columnTypes)
         {
             try
             {
-                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}.db.json";
+                string dirrTableOptions = $@"{JStream.GetPath((table as ITable).GetUE())}\{table.GetName()}{FileTypes.Table_config}";
+
+                if (File.Exists(dirrTableOptions))
+                    File.Delete(dirrTableOptions);
+
+                string modelsJson = JsonSerializer.Serialize(columnTypes);
+                File.WriteAllText(dirrTableOptions, modelsJson);
+
+                table.SetOptions(columnTypes);
+            }
+            catch { throw; }
+        }
+
+        public static void UpdateTable(Table table)
+        {
+            try
+            {
+                string dirrTable = $@"{JStream.GetPath((table as ITable).GetUE())}\{table.GetName()}{FileTypes.Table_suffix}";
 
                 if (File.Exists(dirrTable))
                     File.Delete(dirrTable);
 
-                //File.Create(dirrTable);
-                string modelsJson = JsonSerializer.Serialize(table.GetModels());
+                string modelsJson = JsonSerializer.Serialize(table.GetRows().Select(row => row.Colums).ToList());
                 File.WriteAllText(dirrTable, modelsJson);
             }
             catch { throw; }
         }
 
-        public static void UpdateTables<model>([NotNull] List<ITable<model>> tables)
-            where model : IModel
+        public static void DeleteTable(ITable table)
         {
             try
             {
-                tables.ForEach(table => UpdateTable(table));
+                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix}";
+
+                if (File.Exists(dirrTable))
+                    File.Delete(dirrTable);
             }
             catch { throw; }
         }
-        */
     }
 }
