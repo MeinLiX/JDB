@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using JDBSource;
 using JDBSource.Interfaces;
 
@@ -10,61 +8,62 @@ namespace JDBConsole
     class Program
     {
         private const string ConsoleTitle = "JDB | Console DBMS";
-        private static readonly string[] SchemeNames = { "myDB", "myUserDB" };
+        private static readonly string[] SchemeNames = { "myDB", "myUserdbDB" };
+        private static readonly string MyUserdbTable = "User";
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             Console.Title = ConsoleTitle;
-            Database database = new("super-test2");
-            await database.OpenConnection();
+            Database database = new("super-test");
+            database.OpenConnection();
 
-            await database.RemoveScheme(database.GetSchemes());
+            database.RemoveScheme(database.GetSchemes());
 
-            await testStart(database);
-            //await testWork(database);
+            TestStart(database);
+            TestWork(database);
         }
 
-        //TODO: OpenConection (Table JReader (ReadTable))
-        private static async Task testWork(Database database)
+        private static void TestStart(Database database)
         {
-            IScheme myDBscheme = database.GetSchemes()
-                                        .First(s => s.GetName() == SchemeNames[0]);
-
-            ITable ut = myDBscheme.GetTable(myDBscheme.GetName()); 
-
-
-            Console.WriteLine($"TABLE({ut.GetName()}{Environment.NewLine})");
-            Console.WriteLine($"ID\t Name {Environment.NewLine})");
-            ut.GetRows().ForEach(m => Console.WriteLine($"{m.GetColumnValue("_id")}\t {m.GetColumnValue("Name")} {Environment.NewLine}"));
-        }
-
-        private static async Task testStart(Database database)
-        {
-            await database.AddScheme(SchemeNames[0]);
-            await database.AddScheme(SchemeNames[1]);
+            database.AddScheme(SchemeNames[0]);
+            database.AddScheme(SchemeNames[1]);
 
             IScheme myDBscheme = database.GetSchemes()
                                          .First(s => s.GetName() == SchemeNames[0]);
 
-            ITable ut = await myDBscheme.AddTable("User");
+            ITableWithReflectionAddition ut = myDBscheme.AddTable(MyUserdbTable);
 
-            //await ut.AddModel(new User(1,"test1"));
+            ut.SetOptions(new User());
+            ut.SaveOptions();
 
-            await ut.Save();
+            ut.AddRow(new User(1, "yurii", 123));
+            ut.AddRow(new User(2, "anna", 321));
+
+            ut.Save(); //save new rows
         }
 
-        public class User 
+        private static void TestWork(Database database)
         {
-            public string Name { get; set; }
+            IScheme myDBscheme = database.GetSchemes().First(s => s.GetName() == SchemeNames[0]);
 
-            public User()
-            {
-                 
-            }
+            ITableWithReflectionAddition ut = myDBscheme.GetTable(MyUserdbTable); //or myDBscheme.GetTables().FirstOrDefault(t => t.GetName() == MydbUserTable);
 
-            public User(string name)
+            ut.GetRows().ForEach(m => Console.WriteLine($"{m.GetColumnValue("_id")}\t {m.GetColumnValue("UserName")}\t {m.GetColumnValue("UserInt")} {Environment.NewLine}"));
+        }
+
+        public class User
+        {
+            public int _id { get; set; } //require
+            public string UserName { get; set; }
+            public int UserInt { get; set; }
+
+            public User() { }
+
+            public User(int id, string userName, int userInt)
             {
-                Name = name;
+                _id = id;
+                UserName = userName;
+                UserInt = userInt;
             }
         }
     }
