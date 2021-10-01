@@ -27,5 +27,9 @@ namespace JDBSource.Interfaces
         bool ValidRow(BaseRow row);
 
         List<BaseRow> ParseRows(List<Dictionary<string, string>> rows);
+
+        BaseRow GetRowTemplate();
+
+        BaseRow GenerateRow(List<string> row);
     }
 }

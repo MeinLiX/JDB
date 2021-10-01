@@ -207,9 +207,9 @@ namespace JDBSource
         {
             try
             {
-                Row row = GetRow(Parse(rowModel));
+                BaseRow row = GetRow(Parse(rowModel));
 
-                AddRow(row as BaseRow);
+                AddRow(row);
             }
             catch { throw; }
         }
@@ -245,7 +245,7 @@ namespace JDBSource
 
                 if (columnOption != Validator.NormalizeFormatType(type))
                 {
-                    throw new Exception($"Type {type} unsupported.");
+                    throw new Exception($"Type '{type}' unsupported.");
                 }
 
                 return true;
@@ -274,14 +274,14 @@ namespace JDBSource
 
                 if (!CheckColumn(columnName, columnType))
                 {
-                    throw new Exception($"Unsupported column {columnName} (or {columnType} type).");
+                    throw new Exception($"Unsupported column '{columnName}' (or '{columnType}' type).");
                 }
 
                 string columnValue = GetType(fields[i]?.GetValue(Model));
 
                 if (!CheckType(columnValue, columnType))
                 {
-                    throw new Exception($"Can't convert {columnValue} to {columnType} type.");
+                    throw new Exception($"Can't convert '{columnValue}' to '{columnType}' type.");
                 };
 
                 ColumnNameTypeValue.Add((columnName, columnType, columnValue));
@@ -303,7 +303,7 @@ namespace JDBSource
 
                 if (!Validator.SupportedType(columnType))
                 {
-                    throw new Exception($"Unsupported {columnType} type.");
+                    throw new Exception($"Unsupported '{columnType}' type.");
                 }
 
                 ColumnNameType.Add((columnName, columnType));
@@ -318,22 +318,52 @@ namespace JDBSource
         /// <summary>
         /// Without validator.
         /// </summary>
-        private Row GetRow(List<(string, string, string)> ColumnNameTypeValue)
+        private BaseRow GetRow(List<(string, string, string)> ColumnNameTypeValue)
         {
             try
             {
                 if (ColumnNameTypeValue.Count != ColumnTypes.Count)
                 {
-                    throw new Exception("Unsupported model");
+                    throw new Exception("Unsupported model.");
                 }
-                Row row = GetRow();
+                BaseRow row = GetRowTemplate();
                 ColumnNameTypeValue.ForEach(column => row.SetColumnValue(column.Item1, column.Item3));
                 return row;
             }
             catch { throw; }
         }
+        /// <summary>
+        /// With validator
+        /// </summary>
+        public BaseRow GenerateRow(List<string> row)
+        {
+            try
+            {
+                BaseRow baseRow = GetRowTemplate();
+                if (row.Count != baseRow.Colums.Count)
+                    throw new Exception("Unsupported model.");
 
-        private Row GetRow() => new(ColumnTypes);
+                List<(string, string, string)> modelToParse = new();
+                int i = 0;
+                foreach (var column in baseRow.Colums)
+                {
+                    string columnName = column.Key;
+                    string columnValue = row?[i];
+                    string columnType = ColumnTypes?[columnName];
+                    if (!CheckType(columnValue, columnType))
+                    {
+                        throw new Exception($"Can't convert '{columnValue}' to '{columnType}' type.");
+                    };
+                    modelToParse.Add((columnName, columnType, columnValue));
+                    i++;
+                }
+
+                return GetRow(modelToParse);
+            }
+            catch { throw; }
+        }
+
+        public BaseRow GetRowTemplate() => new Row(ColumnTypes);
 
 
         /// <summary>

@@ -18,10 +18,10 @@ namespace JDBSource
             columsName.ForEach(cm => Colums.Add(cm, null));
         }
 
-        public Row(Dictionary<string, string> columsNameType)
+        public Row(Dictionary<string, string> columsNameValue)
         {
             Colums = new Dictionary<string, string>();
-            foreach (var columnNameType in columsNameType)
+            foreach (var columnNameType in columsNameValue)
                 Colums.Add(columnNameType.Key, columnNameType.Value);
         }
         #endregion
