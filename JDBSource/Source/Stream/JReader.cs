@@ -10,7 +10,7 @@ namespace JDBSource.Source.Stream
 {
     internal class JReader
     {
-        public static List<Scheme> ReadSchemes([NotNull] IDatabase database)
+        public static List<Scheme> ReadSchemes([NotNull] Database database)
         {
             try
             {
@@ -21,40 +21,35 @@ namespace JDBSource.Source.Stream
                     .Select(scheme => new Scheme(scheme.Split("_")[^2].Split("\\")[^1], database))
                     .ToList();
 
-                schemes.ForEach(schem => ReadTables(schem)
-                                        .ForEach(async table => await schem.AddTable(table)));
+                foreach (var scheme in schemes)
+                    foreach (var table in ReadTables(scheme))
+                    {
+                        scheme.AddTable(table);
+                    }
+
+
+
+
                 return schemes;
             }
             catch { throw; }
         }
 
-        public static ITable<IModel> ReadTable([NotNull] string path, [NotNull] IScheme scheme)
+        public static List<Table> ReadTables([NotNull] Scheme scheme)
         {
             try
             {
-                if (!path.Contains(".db.json"))
-                    return null;
-
-                using StreamReader r = new(path);
-                string json = r.ReadToEnd();
-                List<IModel> models = JsonSerializer.Deserialize<List<IModel>>(json); //TODO
-                return new Table<IModel>(path.Split(".db.json")?[0].Split("/")[^1], models);
-            }
-            catch {}
-            return null;
-        }
-
-        public static List<ITable<IModel>> ReadTables([NotNull] IScheme scheme)
-        {
-            try
-            {
-                List<ITable<IModel>> tablesResult = new();
-                string pathDirr = JStream.GetPath(scheme);
-                List<string> tablesNames = Directory.GetFiles(pathDirr)
+                List<Table> tablesResult = new();
+                string schemePathDirr = JStream.GetPath(scheme);
+                List<string> tablesNames = Directory.GetFiles(schemePathDirr)
+                                                    .Where(fileName => fileName.EndsWith(FileTypes.Table_suffix.Get()))
+                                                    .Select(fileName => fileName.Split('\\')?[^1].Split('.')?[0])
                                                     .ToList();
 
-                tablesNames.ForEach(tableName => {
-                    ITable<IModel> table =ReadTable(tableName, scheme);
+                tablesNames.ForEach(tableName =>
+                {
+                    Table table = new Table(tableName, scheme);
+                    ReadTable(table);
                     if (table is not null)
                         tablesResult.Add(table);
                 });
@@ -64,6 +59,54 @@ namespace JDBSource.Source.Stream
             catch { throw; }
         }
 
+        public static Dictionary<string, string> ReadTableOptions([NotNull] ITableWithReflectionAddition table)
+        {
+            try
+            {
+                string dirrTableOptions = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_config.Get()}";
 
+                if (!File.Exists(dirrTableOptions))
+                    throw new Exception($"[JR]: {table.GetName()} table options not found.");
+
+                using StreamReader r = new(dirrTableOptions);
+                string columnTypesJson = r.ReadToEnd();
+                Dictionary<string, string> columnTypes = JsonSerializer.Deserialize<Dictionary<string, string>>(columnTypesJson);
+
+                //table.SetOptions(columnTypes);
+                return columnTypes;
+            }
+            catch { throw; }
+        }
+
+        public static ITableWithReflectionAddition ReadTable([NotNull] ITableWithReflectionAddition table, bool isnew = false)
+        {
+            try
+            {
+                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix.Get()}";
+
+                if (!File.Exists(dirrTable))
+                    throw new Exception($"[JR]: {table.GetName()} table not found.");
+
+                try
+                {
+                    (table as ITable).SetOptions(ReadTableOptions(table));
+                }
+                catch
+                {
+                    if (!isnew)
+                    {
+                        throw new Exception($"[JR]: {table.GetName()} table options not found.");
+                    }
+                }
+
+                using StreamReader r = new(dirrTable);
+                string columnValuesJson = r.ReadToEnd();
+                List<Dictionary<string, string>> columnTypes = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(columnValuesJson);
+
+                table.ParseRows(columnTypes).ForEach(row => (table as ITable).AddRow(row));
+                return table;
+            }
+            catch { throw; }
+        }
     }
 }

@@ -4,13 +4,12 @@ using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace JDBSource
 {
     public class Scheme : IScheme
     {
-        private List<object> Tables { get; set; } = new();
+        private List<ITableWithReflectionAddition> Tables { get; set; } = new();
 
         private IDatabase _database;
         private IDatabase Database
@@ -54,8 +53,8 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => SchemeName = name;
 
-        IDatabase IScheme.GetDB() => Database;
-        void IScheme.SetDB(IDatabase database) => Database = database;
+        IDatabase IUpperEnviroment<IDatabase>.GetUE() => Database;
+        void IUpperEnviroment<IDatabase>.SetUE(IDatabase database) => Database = database;
 
         #endregion
 
@@ -63,56 +62,50 @@ namespace JDBSource
 
         public string GetSuffix() => FileTypes.Scheme_suffix.Get();
 
-        public async Task<ITable<model>> AddTable<model>(ITable<model> table)
-            where model : IModel
+        public ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table)
         {
             _ = table ?? throw new ArgumentNullException();
 
-            table.SetScheme(this);
+            table.SetUE(this);
 
             try
             {
-                JWriter.UpdateTable(table);
-                Tables.Add(table);
+                table = JReader.ReadTable(table);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ERROR]:{ex.Message}");
-            }
+            catch { }
 
+            Tables.Add(table);
             return table;
         }
 
-        public Task<ITable<model>> AddTable<model>(string tableName)
-            where model : IModel
+        public ITableWithReflectionAddition AddTable(string tableName)
         {
             _ = tableName ?? throw new ArgumentNullException();
 
-            return AddTable(new Table<model>(tableName, this));
+            return AddTable(new Table(tableName, this));
         }
 
-        public ITable<model> GetTable<model>(string tableName)
-            where model : IModel
-            => Tables.FirstOrDefault(t => (t as ITable<model>).GetName() == tableName) as ITable<model>;
+        public ITableWithReflectionAddition GetTable(string tableName) => Tables.FirstOrDefault(t => t.GetName() == tableName);
 
-        public List<ITable<IModel>> GetTables()
-            => Tables.Select(t => t as ITable<IModel>).ToList();
+        public List<ITableWithReflectionAddition> GetTables() => Tables.ToList();
 
-        public Task RemoveTables<model>(List<ITable<model>> tables)
-            where model : IModel
+        public void RemoveTables(List<ITableWithReflectionAddition> tables)
         {
-            tables.ForEach(t => Tables.Remove(t.GetName()));
-
-            //Save(); todo?: bolean arg
-
-            return Task.CompletedTask;
+            tables.ForEach(t =>
+            {
+                Tables.Remove(t);
+                JWriter.DeleteTable(t);
+            });
         }
 
-        public async Task<IScheme> Save()
+        public IScheme Save()
         {
             try
             {
-                JWriter.UpdateTables(GetTables());
+                Tables.ForEach(t =>
+                {
+                    t.Save();
+                });
             }
             catch (Exception e)
             {

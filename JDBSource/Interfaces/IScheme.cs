@@ -1,25 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
-    public interface IScheme : ICommon
+    public interface IScheme : ICommon, IUpperEnviroment<IDatabase>
     {
-        Task<IScheme> Save();
+        IScheme Save();
 
-        internal void SetDB(IDatabase database);
-        internal IDatabase GetDB();
+        ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table);
+        ITableWithReflectionAddition AddTable(string tableName);
 
-        Task<ITable<model>> AddTable<model>(ITable<model> table)
-            where model : IModel;
-        Task<ITable<model>> AddTable<model>(string tableName)
-            where model : IModel;
+        void RemoveTables(List<ITableWithReflectionAddition> tables);
 
-        Task RemoveTables<model>(List<ITable<model>> tables)
-            where model : IModel;
-
-        ITable<model> GetTable<model>(string tableName)
-            where model : IModel;
-        List<ITable<IModel>> GetTables();
+        ITableWithReflectionAddition GetTable(string tableName);
+        List<ITableWithReflectionAddition> GetTables();
     }
 }

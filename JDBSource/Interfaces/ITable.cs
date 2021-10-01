@@ -1,20 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using JDBSource.Abstracts;
+using System.Collections.Generic;
 
 namespace JDBSource.Interfaces
 {
-    public interface ITable<model> : ICommon where model : IModel
+    public interface ITable : ICommon, IUpperEnviroment<IScheme>
     {
-        Task<ITable<model>> Save();
+        void Save(bool totalSave = false);
 
-        internal void SetScheme(IScheme scheme);
-        internal IScheme GetScheme();
+        void SaveOptions();
+        void LoadOptions();
 
-        Task AddModels(List<model> models);
-        Task AddModel(model model);
+        /// <summary>
+        /// Set the options for the IRow structure
+        /// </summary>
+        /// <param name="optionModel">key=name, value=type</param>
+        void SetOptions(Dictionary<string, string> optionModel);
 
-        List<model> GetModels(); // use linq
+        void AddRow(BaseRow row);
 
-        Task RemoveModels(List<model> models);
+        List<BaseRow> GetRows();
+
+        int RemoveRows(List<BaseRow> rows);
+
+        bool CheckType(string value, string type);
+
+        bool ValidRow(BaseRow row);
+
+        List<BaseRow> ParseRows(List<Dictionary<string, string>> rows);
     }
 }

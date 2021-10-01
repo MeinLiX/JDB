@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace JDBSource
 {
@@ -63,7 +62,7 @@ namespace JDBSource
 
         public string GetPath() => FullPath;
 
-        public async Task<IDatabase> OpenConnection()
+        public IDatabase OpenConnection()
         {
             if (!Directory.Exists(FullPath))
                 Directory.CreateDirectory(FullPath);
@@ -83,29 +82,23 @@ namespace JDBSource
             return this;
         }
 
-        public Task<IDatabase> CloseConnection()
+        public IDatabase CloseConnection()
         {
             throw new NotImplementedException();
         }
 
         public List<IScheme> GetSchemes() => Schemes;
 
-        public Task<IScheme> AddScheme(string schemeName)
+        public IScheme AddScheme(string schemeName)
         {
             _ = schemeName ?? throw new ArgumentNullException();
 
             return AddScheme(new Scheme(schemeName, this));
         }
 
-        public async Task<IScheme> AddScheme(IScheme scheme)
+        public IScheme AddScheme(IScheme scheme)
         {
-            _ = scheme ?? throw new ArgumentNullException();
-
-            /*if (Schemes.Where(s => s.GetName() == scheme.GetName()).Any())
-                throw new Exception("Name already exists.");*/
-
-            scheme.SetDB(this);
-
+            scheme.SetUE(this);
             Schemes.Add(scheme);
 
             try
@@ -123,7 +116,7 @@ namespace JDBSource
         }
 
 
-        public async Task<int> RemoveScheme(List<IScheme> schemes)
+        public int RemoveScheme(List<IScheme> schemes)
         {
             int deletedCount = 0;
 
@@ -131,7 +124,7 @@ namespace JDBSource
 
             schemes.ForEach(schemeToDelete =>
             {
-                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetDB() == this);
+                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetUE() == this);
                 if (scheme != null)
                 {
                     Schemes.Remove(scheme);

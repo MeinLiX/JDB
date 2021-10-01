@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDBSource", "JDBSource\JDBSource.csproj", "{45FB6088-F158-4374-BFEE-5E83BB1A3A4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDBConsole", "JDBConsole\JDBConsole.csproj", "{5296CF2F-A18F-4D26-B355-3E2382F149C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDBConsole", "JDBConsole\JDBConsole.csproj", "{5296CF2F-A18F-4D26-B355-3E2382F149C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

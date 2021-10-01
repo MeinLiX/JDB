@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
@@ -7,12 +6,13 @@ namespace JDBSource.Interfaces
     {
         string GetPath();
 
-        Task<IDatabase> OpenConnection();
-        Task<IDatabase> CloseConnection();
+        IDatabase OpenConnection();
+        IDatabase CloseConnection();
 
-        Task<IScheme> AddScheme(string schemeName);
-        Task<IScheme> AddScheme(IScheme scheme);
-        Task<int> RemoveScheme(List<IScheme> schemes);
+        IScheme AddScheme(string schemeName);
+        IScheme AddScheme(IScheme scheme);
+
+        int RemoveScheme(List<IScheme> schemes);
 
         List<IScheme> GetSchemes();
 
