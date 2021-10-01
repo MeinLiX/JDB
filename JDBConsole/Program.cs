@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JDBSource;
 using JDBSource.Interfaces;
@@ -36,8 +37,21 @@ namespace JDBConsole
             ut.SetOptions(new User());
             ut.SaveOptions();
 
+            //Enumerable.Range(1, 1_000_000).ToList().ForEach(n => ut.AddRow(new User(n, "yurii", n * 2))); //do this and save == 6 second 
             ut.AddRow(new User(1, "yurii", 123));
             ut.AddRow(new User(2, "anna", 321));
+
+            ITable table = ut;
+
+            table.AddRow(table.GenerateRow(new List<string>() { "3", "example", "000" }));
+            table.AddRow(table.GenerateRow(new List<string>() { "4", "olaola", "111" }));
+
+            //like UNIT TEST :D
+            try
+            {
+                table.AddRow(table.GenerateRow(new List<string>() { "novalid", "exampleTest", "000" }));
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); }
 
             ut.Save(); //save new rows
         }
