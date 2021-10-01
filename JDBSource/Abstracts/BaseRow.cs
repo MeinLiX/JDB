@@ -14,10 +14,10 @@ namespace JDBSource.Abstracts
             set => SetColumnValue("_id", value);
         }
 
-        private Dictionary<string, string> Colums { get; set; }
+        internal Dictionary<string, string> Colums { get; set; }
 
-        private ITable _table;
-        private ITable Table
+        protected ITable _table;
+        protected ITable Table
         {
             get => _table
                     ?? throw new NullReferenceException();
@@ -28,13 +28,6 @@ namespace JDBSource.Abstracts
                 null => throw new NullReferenceException()
             };
         }
-
-        #region Constructor
-        public BaseRow()
-        {
-
-        }
-        #endregion
 
         #region Internal
 
@@ -68,7 +61,7 @@ namespace JDBSource.Abstracts
             }
         }
 
-        private string[] GetColumsName()
+        protected string[] GetColumsName()
         {
             string[] names = new string[Colums.Count];
             int i = 0;

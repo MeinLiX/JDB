@@ -4,14 +4,15 @@ using JDBSource.Source.Stream;
 using JDBSource.Abstracts;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace JDBSource
 {
     public class Table : ITableWithReflectionAddition
     {
-        private List<BaseRow> Rows { get; set; } = new();
-        private Dictionary<string,string> ColumnTypes { get; set; } = new();
+        internal List<BaseRow> Rows { get; set; } = new();
+
+        internal Dictionary<string, string> ColumnTypes { get; set; } = new(); // "column_name" = "column_type"
 
         private IScheme _scheme;
         private IScheme Scheme
@@ -52,7 +53,7 @@ namespace JDBSource
         public Table(string name, List<BaseRow> rows)
             : this(name)
         {
-            
+
         }
 
         public Table(string name, IScheme scheme)
@@ -72,66 +73,126 @@ namespace JDBSource
         #endregion
 
         public string GetName() => TableName;
-        public string GetSuffix() =>FileTypes.Table_suffix.Get();
+        public string GetSuffix() => FileTypes.Table_suffix.Get();
 
-        public Task AddRow(BaseRow row) => AddRow(new List<BaseRow>() { row });
-
-        public Task AddRow(List<BaseRow> rows)
-        {
-            //todo validation;
-            Rows.AddRange(rows);
-            return Task.CompletedTask;
-        }
+        public void AddRow(BaseRow row) => Rows.Add(row); //todo validation
 
         public List<BaseRow> GetRows() => Rows
                                               ?? throw new NullReferenceException();
 
-        public Task RemoveRows(List<BaseRow> rows)
+        public int RemoveRows(List<BaseRow> rows)
         {
-            rows.ForEach(m => Rows.Remove(m));
+            int count = 0;
+            rows.ForEach(m =>
+            {
+                Rows.Remove(m);
+                count++;
+            });
 
-            //Save(); todo?: bolean arg
-
-            return Task.CompletedTask;
+            return count;
         }
 
-        public async Task<ITable> Save()
+        public bool ValidRow(BaseRow row)
         {
-            throw new NotImplementedException();
+            foreach (var field in row.GetAsDictionary())
+            {
+                try
+                {
+                    string type = ColumnTypes[field.Key];
+                    if (CheckType(field.Value, type))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch { }
+                return false;
+            }
+            return false;
+        }
+
+        public void Save()
+        {
             try
             {
-                //JWriter.UpdateTable(this);
+                JWriter.UpdateTableOptions(this, ColumnTypes);
+                JWriter.UpdateTable(this);
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[ERROR]:{e.Message}");
+                Console.WriteLine(e.Message);
             }
-            return this;
         }
 
-        public Task<ITable> LoadOptions()
+        public void LoadOptions()
         {
-            throw new NotImplementedException();
+            try
+            {
+                Dictionary<string, string> columnTypes = JReader.ReadTableOptions(this);
+                SetOptions(columnTypes);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
-        public Task<ITable> SetOptions(List<(string, string)> optionModel)
+        public void SetOptions(Dictionary<string, string> optionModel)
         {
-            throw new NotImplementedException();
+            if (Rows.Count > 0)
+            {
+                throw new Exception($"Unnable change options when table have rows.");
+            }
+
+            if (optionModel.Count() != optionModel.DistinctBy(om => Validator.NormalizeFormatType(om.Value)).Count())
+            {
+                throw new Exception("New columns not unique.");
+            }
+
+            foreach (var optionField in optionModel)
+            {
+                if (!Validator.SupportedType(optionField.Value))
+                {
+                    throw new Exception($"Unsupported {optionField.Value} type.");
+                }
+            }
+
+            ColumnTypes = new Dictionary<string, string>(optionModel);
         }
 
-        public Task<ITable> SetOptions<model>(model optionModel)
+
+        public void SetOptions<model>(model optionModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (Rows.Count > 0)
+                {
+                    throw new Exception($"Unnable change options when table have rows.");
+                }
+
+                Dictionary<string, string> options = new();
+                Parse(optionModel).ForEach(row => options.Add(row.Item1, row.Item2));
+
+                SetOptions(options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
 
-        public Task AddRow<model>(List<model> row)
+        public void AddRow<model>(model rowModel)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                Row row = GetRow(Parse(rowModel));
 
-        public Task AddRow<model>(model row)
-        {
-            throw new NotImplementedException();
+                AddRow(row as BaseRow);
+            }
+            catch { throw; }
         }
 
         public List<model> GetRows<model>()
@@ -139,24 +200,108 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        public Task RemoveRows<model>(List<model> rows)
+        public int RemoveRows<model>(List<model> rowsModel)
         {
             throw new NotImplementedException();
         }
 
-        public bool CheckType(string value, string type)
+        public bool ValidRow<model>(model rowModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Parse(rowModel);
+                return true;
+            }
+            catch { }
+            return false;
         }
 
-        public bool ValidRow(BaseRow row)
+        public bool CheckType(string value, string type) => Validator.CheckType(value, type);
+
+        private bool CheckColumn(string columnName, string type)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var columnOption = ColumnTypes[columnName];
+
+                if (columnOption != Validator.NormalizeFormatType(type))
+                {
+                    throw new Exception($"Type {type} unsupported.");
+                }
+
+                return true;
+            }
+            catch { }
+            return false;
         }
 
-        public bool ValidRow<model>(model row)
+        private static string GetType(object obj) => Convert.ToString(obj);
+
+        /// <summary>
+        /// Try to parse object to row.
+        /// Type validator inside.
+        /// </summary>
+        /// <returns>(ColumnName, ColumnType, ColumnValue)</returns>
+        private List<(string, string, string)> Parse<model>(model Model)
         {
-            throw new NotImplementedException();
+            Type type = typeof(model);
+            var fields = type.GetProperties();
+            List<(string, string, string)> ColumnNameTypeValue = new();
+            for (int i = 0; i < fields.Length; i++)
+            {
+                string columnName = fields[i]?.Name;
+                string columnType = Validator.GetTypeFromDefaultTypes(fields[i]?.PropertyType
+                                             ?.ToString());
+
+                if (!CheckColumn(columnName, columnType))
+                {
+                    throw new Exception($"Unsupported column {columnName} (or {columnType} type).");
+                }
+
+                string columnValue = GetType(fields[i]?.GetValue(Model));
+
+                if (!CheckType(columnValue, columnType))
+                {
+                    throw new Exception($"Can't convert {columnValue} to {columnType} type.");
+                };
+
+                ColumnNameTypeValue.Add((columnName, columnType, columnValue));
+            }
+
+            return ColumnNameTypeValue;
+        }
+
+        /// <summary>
+        /// Without validator.
+        /// </summary>
+        private Row GetRow(List<(string, string, string)> ColumnNameTypeValue)
+        {
+            try
+            {
+                if (ColumnNameTypeValue.Count != ColumnTypes.Count)
+                {
+                    throw new Exception("Unsupported model");
+                }
+                Row row = GetRow();
+                ColumnNameTypeValue.ForEach(column => row.SetColumnValue(column.Item1, column.Item3));
+                return row;
+            }
+            catch { throw; }
+        }
+
+        private Row GetRow() => new(ColumnTypes);
+
+
+        /// <summary>
+        /// Without validator.
+        /// </summary>
+        /// <param name="rows">(ColumnName, ColumValue)</param>
+        public List<BaseRow> ParseRows(List<Dictionary<string, string>> rows)
+        {
+            List<BaseRow> baseRows = new();
+            rows.ForEach(row => baseRows.Add(new Row(row)));
+
+            return baseRows;
         }
     }
 }

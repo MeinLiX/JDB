@@ -4,7 +4,6 @@ using JDBSource.Source.Stream;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace JDBSource
 {
@@ -63,53 +62,51 @@ namespace JDBSource
 
         public string GetSuffix() => FileTypes.Scheme_suffix.Get();
 
-        public async Task<ITable> AddTable(ITable table)
+        public ITable AddTable(ITable table)
         {
-            throw new NotImplementedException();
             _ = table ?? throw new ArgumentNullException();
 
             table.SetUE(this);
 
             try
             {
-                //JWriter.UpdateTable(table);
-                Tables.Add(table);
+                table.LoadOptions();
+                table=JReader.ReadTable(table);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[ERROR]:{ex.Message}");
-            }
+            catch {}
 
+            Tables.Add(table);
             return table;
         }
 
-        public Task<ITable> AddTable(string tableName)
+        public ITable AddTable(string tableName)
         {
-            throw new NotImplementedException();
             _ = tableName ?? throw new ArgumentNullException();
 
-            //return AddTable(new Table(tableName, this));
+            return AddTable(new Table(tableName, this));
         }
 
         public ITable GetTable(string tableName) => Tables.FirstOrDefault(t => t.GetName() == tableName);
 
         public List<ITable> GetTables() => Tables.ToList();
 
-        public Task RemoveTables(List<ITable> tables)
+        public void RemoveTables(List<ITable> tables)
         {
-            tables.ForEach(t => Tables.Remove(t));
-
-            //Save(); todo?: bolean arg
-
-            return Task.CompletedTask;
+            tables.ForEach(t =>
+            {
+                Tables.Remove(t);
+                JWriter.DeleteTable(t);
+            });
         }
 
-        public async Task<IScheme> Save()
+        public IScheme Save()
         {
             try
             {
-                throw new NotImplementedException();
-                //JWriter.UpdateTables(GetTables());
+                Tables.ForEach(t =>
+                {
+                    t.Save();
+                });
             }
             catch (Exception e)
             {

@@ -1,31 +1,30 @@
 ﻿using JDBSource.Abstracts;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JDBSource.Interfaces
 {
     public interface ITable : ICommon, IUpperEnviroment<IScheme>
     {
-        Task<ITable> Save();
+        void Save();
 
-        Task<ITable> LoadOptions();
+        void LoadOptions();
 
         /// <summary>
         /// Set the options for the IRow structure
         /// </summary>
-        /// <param name="optionModel">p1=name, p2=type</param>
-        Task<ITable> SetOptions(List<(string,string)> optionModel);
+        /// <param name="optionModel">key=name, value=type</param>
+        void SetOptions(Dictionary<string, string> optionModel);
 
-        Task AddRow(List<BaseRow> rows);
-
-        Task AddRow(BaseRow row);
+        void AddRow(BaseRow row);
 
         List<BaseRow> GetRows();
 
-        Task RemoveRows(List<BaseRow> rows);
+        int RemoveRows(List<BaseRow> rows);
 
         bool CheckType(string value, string type);
 
         bool ValidRow(BaseRow row);
+
+        List<BaseRow> ParseRows(List<Dictionary<string, string>> rows);
     }
 }
