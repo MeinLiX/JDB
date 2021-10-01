@@ -20,12 +20,12 @@
         public static string Get(this FileTypes fileType) => fileType switch
         {
             FileTypes.DB_suffix => "_JDB",
-            FileTypes.DB_config => ".db_option.db.json",
+            FileTypes.DB_config => ".db_option.json",
 
             FileTypes.Scheme_suffix => "_Scheme",
 
             FileTypes.Table_suffix => ".db.json",
-            FileTypes.Table_config => ".table_option.db.json",
+            FileTypes.Table_config => ".table_option.json",
 
             _ => throw new System.Exception("Unknown FileTypes.")
         };

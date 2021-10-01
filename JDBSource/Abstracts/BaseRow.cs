@@ -16,8 +16,8 @@ namespace JDBSource.Abstracts
 
         internal Dictionary<string, string> Colums { get; set; }
 
-        protected ITable _table;
-        protected ITable Table
+        protected ITableWithReflectionAddition _table;
+        protected ITableWithReflectionAddition Table
         {
             get => _table
                     ?? throw new NullReferenceException();
@@ -31,8 +31,8 @@ namespace JDBSource.Abstracts
 
         #region Internal
 
-        ITable IUpperEnviroment<ITable>.GetUE() => Table;
-        void IUpperEnviroment<ITable>.SetUE(ITable table) => Table = table;
+        ITableWithReflectionAddition IUpperEnviroment<ITableWithReflectionAddition>.GetUE() => Table;
+        void IUpperEnviroment<ITableWithReflectionAddition>.SetUE(ITableWithReflectionAddition table) => Table = table;
 
         #endregion
 

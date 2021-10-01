@@ -21,7 +21,13 @@ namespace JDBSource.Source.Stream
                     .Select(scheme => new Scheme(scheme.Split("_")[^2].Split("\\")[^1], database))
                     .ToList();
 
-                schemes.ForEach(scheme => ReadTables(scheme).ForEach(table => scheme.AddTable(table)));
+                foreach (var scheme in schemes)
+                    foreach (var table in ReadTables(scheme))
+                    {
+                        scheme.AddTable(table);
+                    }
+
+
 
 
                 return schemes;
@@ -36,7 +42,8 @@ namespace JDBSource.Source.Stream
                 List<Table> tablesResult = new();
                 string schemePathDirr = JStream.GetPath(scheme);
                 List<string> tablesNames = Directory.GetFiles(schemePathDirr)
-                                                    .Select(fileName => fileName.Split('.')?[0])
+                                                    .Where(fileName => fileName.EndsWith(FileTypes.Table_suffix.Get()))
+                                                    .Select(fileName => fileName.Split('\\')?[^1].Split('.')?[0])
                                                     .ToList();
 
                 tablesNames.ForEach(tableName =>
@@ -52,14 +59,14 @@ namespace JDBSource.Source.Stream
             catch { throw; }
         }
 
-        public static Dictionary<string, string> ReadTableOptions([NotNull] Table table)
+        public static Dictionary<string, string> ReadTableOptions([NotNull] ITableWithReflectionAddition table)
         {
             try
             {
-                string dirrTableOptions = $@"{JStream.GetPath((table as ITable).GetUE())}\{table.GetName()}{FileTypes.Table_config}";
+                string dirrTableOptions = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_config.Get()}";
 
                 if (!File.Exists(dirrTableOptions))
-                    throw new Exception($"[JR]: {(table as ITable).GetName()} table options not found.");
+                    throw new Exception($"[JR]: {table.GetName()} table options not found.");
 
                 using StreamReader r = new(dirrTableOptions);
                 string columnTypesJson = r.ReadToEnd();
@@ -71,20 +78,32 @@ namespace JDBSource.Source.Stream
             catch { throw; }
         }
 
-        public static ITable ReadTable([NotNull] ITable table)
+        public static ITableWithReflectionAddition ReadTable([NotNull] ITableWithReflectionAddition table, bool isnew = false)
         {
             try
             {
-                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix}";
+                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix.Get()}";
 
                 if (!File.Exists(dirrTable))
                     throw new Exception($"[JR]: {table.GetName()} table not found.");
+
+                try
+                {
+                    (table as ITable).SetOptions(ReadTableOptions(table));
+                }
+                catch
+                {
+                    if (!isnew)
+                    {
+                        throw new Exception($"[JR]: {table.GetName()} table options not found.");
+                    }
+                }
 
                 using StreamReader r = new(dirrTable);
                 string columnValuesJson = r.ReadToEnd();
                 List<Dictionary<string, string>> columnTypes = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(columnValuesJson);
 
-                table.ParseRows(columnTypes).ForEach(row => table.AddRow(row));
+                table.ParseRows(columnTypes).ForEach(row => (table as ITable).AddRow(row));
                 return table;
             }
             catch { throw; }

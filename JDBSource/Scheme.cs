@@ -9,7 +9,7 @@ namespace JDBSource
 {
     public class Scheme : IScheme
     {
-        private List<ITable> Tables { get; set; } = new();
+        private List<ITableWithReflectionAddition> Tables { get; set; } = new();
 
         private IDatabase _database;
         private IDatabase Database
@@ -62,7 +62,7 @@ namespace JDBSource
 
         public string GetSuffix() => FileTypes.Scheme_suffix.Get();
 
-        public ITable AddTable(ITable table)
+        public ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table)
         {
             _ = table ?? throw new ArgumentNullException();
 
@@ -70,27 +70,26 @@ namespace JDBSource
 
             try
             {
-                table.LoadOptions();
-                table=JReader.ReadTable(table);
+                table = JReader.ReadTable(table);
             }
-            catch {}
+            catch { }
 
             Tables.Add(table);
             return table;
         }
 
-        public ITable AddTable(string tableName)
+        public ITableWithReflectionAddition AddTable(string tableName)
         {
             _ = tableName ?? throw new ArgumentNullException();
 
             return AddTable(new Table(tableName, this));
         }
 
-        public ITable GetTable(string tableName) => Tables.FirstOrDefault(t => t.GetName() == tableName);
+        public ITableWithReflectionAddition GetTable(string tableName) => Tables.FirstOrDefault(t => t.GetName() == tableName);
 
-        public List<ITable> GetTables() => Tables.ToList();
+        public List<ITableWithReflectionAddition> GetTables() => Tables.ToList();
 
-        public void RemoveTables(List<ITable> tables)
+        public void RemoveTables(List<ITableWithReflectionAddition> tables)
         {
             tables.ForEach(t =>
             {

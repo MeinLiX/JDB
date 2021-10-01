@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JDBSource.Interfaces
 {
-    interface ITableWithReflectionAddition : ITable
+    public interface ITableWithReflectionAddition : ITable
     {
         void SetOptions<model>(model optionModel);
 

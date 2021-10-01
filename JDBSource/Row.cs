@@ -22,7 +22,7 @@ namespace JDBSource
         {
             Colums = new Dictionary<string, string>();
             foreach (var columnNameType in columsNameType)
-                Colums.Add(columnNameType.Key, null);
+                Colums.Add(columnNameType.Key, columnNameType.Value);
         }
         #endregion
     }

@@ -6,12 +6,12 @@ namespace JDBSource.Interfaces
     {
         IScheme Save();
 
-        ITable AddTable(ITable table);
-        ITable AddTable(string tableName);
+        ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table);
+        ITableWithReflectionAddition AddTable(string tableName);
 
-        void RemoveTables(List<ITable> tables);
+        void RemoveTables(List<ITableWithReflectionAddition> tables);
 
-        ITable GetTable(string tableName);
-        List<ITable> GetTables();
+        ITableWithReflectionAddition GetTable(string tableName);
+        List<ITableWithReflectionAddition> GetTables();
     }
 }

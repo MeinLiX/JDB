@@ -114,11 +114,15 @@ namespace JDBSource
             return false;
         }
 
-        public void Save()
+        public void Save(bool totalSave = false)
         {
             try
             {
-                JWriter.UpdateTableOptions(this, ColumnTypes);
+                if (totalSave)
+                {
+                    SaveOptions();
+                }
+
                 JWriter.UpdateTable(this);
             }
             catch (Exception e)
@@ -127,6 +131,19 @@ namespace JDBSource
             }
         }
 
+        public void SaveOptions()
+        {
+            try
+            {
+                JWriter.UpdateTableOptions(this, ColumnTypes);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+
         public void LoadOptions()
         {
             try
@@ -134,10 +151,7 @@ namespace JDBSource
                 Dictionary<string, string> columnTypes = JReader.ReadTableOptions(this);
                 SetOptions(columnTypes);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            catch { throw; }
         }
 
         public void SetOptions(Dictionary<string, string> optionModel)
@@ -147,7 +161,12 @@ namespace JDBSource
                 throw new Exception($"Unnable change options when table have rows.");
             }
 
-            if (optionModel.Count() != optionModel.DistinctBy(om => Validator.NormalizeFormatType(om.Value)).Count())
+            if (optionModel.Count == 0)
+            {
+                throw new Exception($"Zero colums.");
+            }
+
+            if (optionModel.Count() != optionModel.DistinctBy(om => Validator.NormalizeFormatType(om.Key)).Count())
             {
                 throw new Exception("New columns not unique.");
             }
@@ -174,7 +193,7 @@ namespace JDBSource
                 }
 
                 Dictionary<string, string> options = new();
-                Parse(optionModel).ForEach(row => options.Add(row.Item1, row.Item2));
+                ParseOption<model>().ForEach(row => options.Add(row.Item1, row.Item2));
 
                 SetOptions(options);
             }
@@ -269,6 +288,31 @@ namespace JDBSource
             }
 
             return ColumnNameTypeValue;
+        }
+
+        private static List<(string, string)> ParseOption<model>()
+        {
+            Type type = typeof(model);
+            var fields = type.GetProperties();
+            List<(string, string)> ColumnNameType = new();
+            for (int i = 0; i < fields.Length; i++)
+            {
+                string columnName = fields[i]?.Name;
+                string columnType = Validator.GetTypeFromDefaultTypes(fields[i]?.PropertyType
+                                             ?.ToString());
+
+                if (!Validator.SupportedType(columnType))
+                {
+                    throw new Exception($"Unsupported {columnType} type.");
+                }
+
+                ColumnNameType.Add((columnName, columnType));
+            }
+
+            if (!ColumnNameType.Any(cnt => cnt.Item1 == "_id"))
+                throw new Exception("_id column require.");
+
+            return ColumnNameType;
         }
 
         /// <summary>

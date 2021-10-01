@@ -2,7 +2,7 @@
 
 namespace JDBSource.Interfaces
 {
-    public interface IRow : IUpperEnviroment<ITable>
+    public interface IRow : IUpperEnviroment<ITableWithReflectionAddition>
     {
         string _id { get; set; }
 

@@ -5,8 +5,9 @@ namespace JDBSource.Interfaces
 {
     public interface ITable : ICommon, IUpperEnviroment<IScheme>
     {
-        void Save();
+        void Save(bool totalSave = false);
 
+        void SaveOptions();
         void LoadOptions();
 
         /// <summary>

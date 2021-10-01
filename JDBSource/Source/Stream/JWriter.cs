@@ -60,12 +60,26 @@ namespace JDBSource.Source.Stream
         {
             try
             {
-                string dirrTableOptions = $@"{JStream.GetPath((table as ITable).GetUE())}\{table.GetName()}{FileTypes.Table_config}";
+                string dirrTableOptions = $@"{JStream.GetPath((table as ITableWithReflectionAddition).GetUE())}\{table.GetName()}{FileTypes.Table_config.Get()}";
 
-                if (File.Exists(dirrTableOptions))
-                    File.Delete(dirrTableOptions);
+                Dictionary<string, string> lastOption;
+                try
+                {
+                    lastOption = JReader.ReadTableOptions(table);
+                }
+                catch { lastOption = new(); }
 
-                string modelsJson = JsonSerializer.Serialize(columnTypes);
+                if (lastOption == columnTypes)
+                    return;
+
+                DeleteTable(table);
+
+                string modelsJson = columnTypes.Count switch
+                {
+                    0 => JsonSerializer.Serialize(lastOption),
+                    _ => JsonSerializer.Serialize(columnTypes)
+                };
+
                 File.WriteAllText(dirrTableOptions, modelsJson);
 
                 table.SetOptions(columnTypes);
@@ -77,7 +91,7 @@ namespace JDBSource.Source.Stream
         {
             try
             {
-                string dirrTable = $@"{JStream.GetPath((table as ITable).GetUE())}\{table.GetName()}{FileTypes.Table_suffix}";
+                string dirrTable = $@"{JStream.GetPath((table as ITableWithReflectionAddition).GetUE())}\{table.GetName()}{FileTypes.Table_suffix.Get()}";
 
                 if (File.Exists(dirrTable))
                     File.Delete(dirrTable);
@@ -88,14 +102,18 @@ namespace JDBSource.Source.Stream
             catch { throw; }
         }
 
-        public static void DeleteTable(ITable table)
+        public static void DeleteTable(ITableWithReflectionAddition table)
         {
             try
             {
-                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix}";
+                string dirrTable = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_suffix.Get()}";
+                string dirrTableOption = $@"{JStream.GetPath(table.GetUE())}\{table.GetName()}{FileTypes.Table_config.Get()}";
 
                 if (File.Exists(dirrTable))
                     File.Delete(dirrTable);
+
+                if (File.Exists(dirrTableOption))
+                    File.Delete(dirrTableOption);
             }
             catch { throw; }
         }
