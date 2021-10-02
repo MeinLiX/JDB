@@ -43,13 +43,13 @@ namespace JDBConsole
 
             ITable table = ut;
 
-            table.AddRow(table.GenerateRow(new List<string>() { "3", "example", "000" }));
-            table.AddRow(table.GenerateRow(new List<string>() { "4", "olaola", "111" }));
+            table.AddRow(table.GenerateRow(4, "olaola", 111));
+            table.AddRow(table.GenerateRow(5, "olaola", 112));
 
             //like UNIT TEST :D
             try
             {
-                table.AddRow(table.GenerateRow(new List<string>() { "novalid", "exampleTest", "000" }));
+                table.AddRow(table.GenerateRow("novalid", "exampleTest", 000));
             }
             catch (Exception e) { Console.WriteLine(e.Message); }
 
