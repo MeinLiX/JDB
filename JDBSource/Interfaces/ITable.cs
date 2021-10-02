@@ -30,6 +30,6 @@ namespace JDBSource.Interfaces
 
         BaseRow GetRowTemplate();
 
-        BaseRow GenerateRow(List<string> row);
+        BaseRow GenerateRow(params object[] row);
     }
 }

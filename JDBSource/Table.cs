@@ -335,12 +335,12 @@ namespace JDBSource
         /// <summary>
         /// With validator
         /// </summary>
-        public BaseRow GenerateRow(List<string> row)
+        public BaseRow GenerateRow(params object[] row)
         {
             try
             {
                 BaseRow baseRow = GetRowTemplate();
-                if (row.Count != baseRow.Colums.Count)
+                if (row.Length != baseRow.Colums.Count)
                     throw new Exception("Unsupported model.");
 
                 List<(string, string, string)> modelToParse = new();
@@ -348,13 +348,18 @@ namespace JDBSource
                 foreach (var column in baseRow.Colums)
                 {
                     string columnName = column.Key;
-                    string columnValue = row?[i];
+                    string columnInsertValue = GetType(row?[i]);
+                    string columnInsertType = Validator.GetTypeFromDefaultTypes(row?[i].GetType()?.ToString()); ;
                     string columnType = ColumnTypes?[columnName];
-                    if (!CheckType(columnValue, columnType))
+
+                    if (columnInsertType != columnType)
+                        throw new Exception($"Column '{columnName}'(value: '{columnInsertValue}') must be '{columnType}' type (not '{columnInsertType}')");
+
+                    if (!CheckType(columnInsertValue, columnType))
                     {
-                        throw new Exception($"Can't convert '{columnValue}' to '{columnType}' type.");
+                        throw new Exception($"Can't convert '{columnInsertValue}' to '{columnType}' type.");
                     };
-                    modelToParse.Add((columnName, columnType, columnValue));
+                    modelToParse.Add((columnName, columnType, columnInsertValue));
                     i++;
                 }
 
