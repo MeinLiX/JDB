@@ -1,6 +1,6 @@
 ﻿namespace JDBSource.Source
 {
-    enum FileTypes
+    public enum FileTypes
     {
         //DBs
         DB_config = 0,
@@ -15,7 +15,7 @@
     }
 
 
-    static class EnumExpansion
+    public static class EnumExpansion
     {
         public static string Get(this FileTypes fileType) => fileType switch
         {
