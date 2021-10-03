@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JDBWinClient.Source;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -20,38 +21,47 @@ namespace JDBWinClient.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        ObservableCollection<TestGrid> DBTableDataGridList { get; set; } =new();
+        private BaseLogicDB baseLogicDB { get; set; } = new();
 
         public MainWindow()
         {
             InitializeComponent();
+
             GenerateTestData();
-            DBTableDataGrid.ItemsSource=DBTableDataGridList;
+
+            baseLogicDB.GenerateTreeView(ref DBTreeView /*, ref DBTableDataGrid*/);
         }
 
         private void GenerateTestData()
         {
-            DBTableDataGridList.Add(new TestGrid("LOLOLO", "what?", 1));
-            DBTableDataGridList.Add(new TestGrid("DADADA", "what1?", 1));
-            DBTableDataGridList.Add(new TestGrid("TETETE", "what2?", 2));
-            DBTableDataGridList.Add(new TestGrid("KOKOKO", "what3?", 1));
-            DBTableDataGridList.Add(new TestGrid("KEKEKE", "what4?", 4));
-            DBTableDataGridList.Add(new TestGrid("HEHEHE", "what5?", 1));
+            DBTableListView.Items.Clear();
+            DBTableListView.View = null;
+
+            var gridView = new GridView();
+            gridView.Columns.Add(new GridViewColumn
+            {
+                Header = "Id",
+                DisplayMemberBinding = new Binding("Name")
+            });
+            gridView.Columns.Add(new GridViewColumn
+            {
+                Header = "Id2"
+            });
+            gridView.Columns.Add(new GridViewColumn
+            {
+                Header = "Id3"
+            });
+            
+            DBTableListView.View= gridView;
+            DBTableListView.Items.Add(new List<string>() { "1", "2","3"});
+            DBTableListView.Items.Add(new List<string>() { "4", "5","6"});
+            DBTableListView.Items.Add(new List<string>() { "7", "8","9"});
+
         }
-    }
 
-    public class TestGrid
-    {
-        public string? Name { get; set; }
-
-        public string? Description {  get; set; }
-        public int? Count { get; set; }
-
-        public TestGrid(string? name, string? description, int? count)
+        private void ReloadTreeButton_Click(object sender, RoutedEventArgs e)
         {
-            Name = name;
-            Description = description;
-            Count = count;
+            baseLogicDB.GenerateTreeView(ref DBTreeView /*, ref DBTableDataGrid*/);
         }
     }
 }

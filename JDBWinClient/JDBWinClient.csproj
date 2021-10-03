@@ -8,12 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Content\JDB.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignColors" Version="2.0.3" />
     <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Source\" />
+    <ProjectReference Include="..\JDBSource\JDBSource.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Content\JDB.ico" />
   </ItemGroup>
 
 </Project>

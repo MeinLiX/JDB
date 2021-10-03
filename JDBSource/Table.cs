@@ -382,5 +382,7 @@ namespace JDBSource
 
             return baseRows;
         }
+
+        public List<string> GetColumnNames() => ColumnTypes.Select(column => column.Key).ToList();
     }
 }

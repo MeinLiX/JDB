@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JDBWinClient.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="JDB Client" Height="450" Width="800" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico">
     <DockPanel>
         <Grid>
             <Grid.RowDefinitions>
@@ -26,8 +26,8 @@
                     Grid.Column="0"
                     Width="200">
                     <MenuItem
-                        Header="Functions">
-
+                        Header="Functions" 
+                        Background="#FFEAE5FF">
                         <MenuItem
                             Header="Create">
                             <MenuItem
@@ -65,12 +65,19 @@
                         ClipToBounds="False"
                         HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="48">
                         <Button
+                            Name="ReloadTreeButton"
+                            Click="ReloadTreeButton_Click"
+                            Height="60"
+                            Content="{materialDesign:PackIcon Kind=Reload}" />
+
+
+                        <!--<Button
                             Name="SomeButton"
                             Grid.Row="0"
                             Style="{StaticResource MaterialDesignOutlinedButton}"
                             Width="80" Height="30"
                             HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,5,5"
-                            Content="Some"/>
+                            Content="Some"/>-->
                     </ToolBar>
                 </ToolBarTray>
             </Grid>
@@ -92,36 +99,20 @@
                     Grid.Column="0"
                     MinWidth="200" Margin="5">
                     <TreeViewItem
-                        Header="Some">
-                        <TreeViewItem
-                            Header="Some inside 1">
-                            <TextBlock>
-                                <Run
-                                    Text="Inside some inside 1" />
-                            </TextBlock>
-                        </TreeViewItem>
-
-                        <TreeViewItem
-                            Header="Some inside 2">
-                            <TextBlock>
-                                <Run
-                                    Text="Inside some inside 2" />
-                            </TextBlock>
-                        </TreeViewItem>
+                        Header="Empty DB's">
                     </TreeViewItem>
                 </TreeView>
 
-                <DataGrid
-                    Name="DBTableDataGrid"
-                    Grid.Column="1"
-                    CanUserAddRows="False"
-                    CanUserDeleteRows="False"
-                    CanUserReorderColumns="False"
-                    CanUserResizeColumns="False"
-                    CanUserResizeRows="False"
-                    CanUserSortColumns="False"
-                    materialDesign:DataGridAssist.CellPadding="10"
-                    materialDesign:DataGridAssist.ColumnHeaderPadding="10" />
+                <ListView
+                    Name="DBTableListView"
+                    Grid.Column="1">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Header="Empty" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
         </Grid>
     </DockPanel>

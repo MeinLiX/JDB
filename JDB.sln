@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDBSource", "JDBSource\JDBS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDBConsole", "JDBConsole\JDBConsole.csproj", "{5296CF2F-A18F-4D26-B355-3E2382F149C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JDBWinClient", "JDBWinClient\JDBWinClient.csproj", "{8A6D60E4-A3E3-427F-B828-6C278B204C6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JDBWinClient", "JDBWinClient\JDBWinClient.csproj", "{8A6D60E4-A3E3-427F-B828-6C278B204C6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
