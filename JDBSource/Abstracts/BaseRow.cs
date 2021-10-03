@@ -36,6 +36,12 @@ namespace JDBSource.Abstracts
 
         #endregion
 
+        public string this[string columnName]
+        {
+            get => GetColumnValue(columnName);
+            set => SetColumnValue(columnName, value);
+        }
+
         public bool HaveColumn(string columnName) => TryGetColumnValue(columnName, out _);
 
         public string GetColumnValue(string columnName)

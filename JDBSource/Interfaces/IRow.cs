@@ -6,6 +6,12 @@ namespace JDBSource.Interfaces
     {
         string _id { get; set; }
 
+        public string this[string columnName]
+        {
+            get => GetColumnValue(columnName);
+            set => SetColumnValue(columnName, value);
+        }
+
         bool HaveColumn(string columnName);
 
         string GetColumnValue(string columnName);
