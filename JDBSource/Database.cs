@@ -33,8 +33,8 @@ namespace JDBSource
             set =>
                 _fullPath = value switch
                 {
-                    not null => value + @$"\{DatabaseName}",
-                    null => Environment.CurrentDirectory + @$"\{DatabaseName}"
+                    not null => value + @$"\{DatabaseName}{GetSuffix()}",
+                    null => Environment.CurrentDirectory + @$"\{DatabaseName}{GetSuffix()}"
                 };
         }
 
