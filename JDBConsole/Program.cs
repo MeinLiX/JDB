@@ -46,7 +46,7 @@ namespace JDBConsole
             table.AddRow(table.GenerateRow(4, "olaola", 111));
             table.AddRow(table.GenerateRow(5, "olaola", 112));
 
-            //like UNIT TEST :D
+            //like UNIT TEST :D  
             try
             {
                 table.AddRow(table.GenerateRow("novalid", "exampleTest", 000));
@@ -62,7 +62,7 @@ namespace JDBConsole
 
             ITableWithReflectionAddition ut = myDBscheme.GetTable(MyUserdbTable); //or myDBscheme.GetTables().FirstOrDefault(t => t.GetName() == MydbUserTable);
 
-            ut.GetRows().ForEach(m => Console.WriteLine($"{m.GetColumnValue("_id")}\t {m.GetColumnValue("UserName")}\t {m.GetColumnValue("UserInt")} {Environment.NewLine}"));
+            ut.GetRows().ForEach(m => Console.WriteLine($"{m["_id"]}\t {m["UserName"]}\t {m["UserInt"]} {Environment.NewLine}"));
         }
 
         public class User
