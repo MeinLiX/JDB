@@ -39,7 +39,8 @@ namespace JDBWinClient.Views
         }
         private void DialogWindowOfAddition_Click(object sender, RoutedEventArgs e)
         {
-           
+            AdditionWindow additionWindow = new();
+            additionWindow.ShowDialog();
         }
     }
 }
