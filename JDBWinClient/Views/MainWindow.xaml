@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JDBWinClient.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="JDB Client" Height="450" Width="800" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico">
+        Title="JDB Client" MinHeight="300" Height="450" Width="800" MinWidth="500" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico">
     <DockPanel>
         <Grid>
             <Grid.RowDefinitions>
@@ -70,6 +70,13 @@
                             Height="60"
                             Content="{materialDesign:PackIcon Kind=Reload}" />
 
+                        <Button
+                            Name="DialogWindowOfAddition_Button"
+                            Click="DialogWindowOfAddition_Click"
+                            Height="60"
+                            Content="{materialDesign:PackIcon Kind=Add}" />
+                        
+                        <Separator />
 
                         <!--<Button
                             Name="SomeButton"
@@ -102,17 +109,17 @@
                         Header="Empty DB's">
                     </TreeViewItem>
                 </TreeView>
-
-                <ListView
-                    Name="DBTableListView"
-                    Grid.Column="1">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                Header="Empty" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <DataGrid
+                    Name="DBTableDataGrid"
+                    Grid.Column="1"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    CanUserReorderColumns="False"
+                    CanUserResizeColumns="False"
+                    CanUserResizeRows="False"
+                    CanUserSortColumns="False"
+                    materialDesign:DataGridAssist.CellPadding="15"
+                    materialDesign:DataGridAssist.ColumnHeaderPadding="15" />
             </Grid>
         </Grid>
     </DockPanel>

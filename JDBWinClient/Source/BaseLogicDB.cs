@@ -1,6 +1,7 @@
 ﻿using JDBSource;
 using JDBSource.Interfaces;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,9 +30,10 @@ namespace JDBWinClient.Source
                    });
         }
 
-        public void GenerateTreeView(ref TreeView _treeView /*, ref DataGrid _mainDataGrid*/)
+        public void GenerateTreeView(ref TreeView _treeView, ref DataGrid _mainDataGrid, ref string _currentTable)
         {
-            DataGrid mainDataGrid = new();
+            DataGrid mainDataGrid = _mainDataGrid;
+            string currentTable = _currentTable;
             TreeView treeView = _treeView;
             treeView.Items.Clear();
             Databases.ForEach(db =>
@@ -46,7 +48,7 @@ namespace JDBWinClient.Source
                     {
                         TreeViewItem Table_TreeView = new();
                         Table_TreeView.Header = table.GetName();
-                        Table_TreeView.MouseDoubleClick += (object sender, MouseButtonEventArgs arg) => GenerateDataGrid(ref mainDataGrid, table); //TODO fn for change ViewList in main window
+                        Table_TreeView.MouseDoubleClick += (object sender, MouseButtonEventArgs arg) => GenerateDataGrid(ref mainDataGrid, ref currentTable, table);
                         Scheme_TreeView.Items.Add(Table_TreeView);
                     });
                     DB_TreeView.Items.Add(Scheme_TreeView);
@@ -55,29 +57,39 @@ namespace JDBWinClient.Source
             });
         }
 
-        public void GenerateDataGrid(ref DataGrid _mainDataGrid, ITableWithReflectionAddition _tableReflection)
+        public void GenerateDataGrid(ref DataGrid _mainDataGrid, ref string _currentTable, ITableWithReflectionAddition _tableReflection)
         {
 
-            DataGrid mainDataGrid = _mainDataGrid;
-            mainDataGrid.ClearValue(ItemsControl.ItemsSourceProperty);
+            _mainDataGrid.ClearValue(ItemsControl.ItemsSourceProperty);
+            _mainDataGrid.Columns.Clear();
+            _mainDataGrid.Items.Clear();
 
             ITable _table = _tableReflection;
+            _currentTable = _table.GetName();
 
-            var tableColumnNames = _table.GetColumnNames();
-            var tableRows = _table.GetRows();
+            List<string> tableColumnNames = _table.GetColumnNames();
+            List<JDBSource.Abstracts.BaseRow> tableRows = _table.GetRows();
 
-            mainDataGrid.Columns.Clear();
-            tableColumnNames.ForEach(columnName => mainDataGrid.Columns.Add(new DataGridTextColumn
+
+            DataTable dt = new();
+
+            tableColumnNames.ForEach(columnName => dt.Columns.Add(new DataColumn
             {
-                Header = columnName
+                DataType = System.Type.GetType("System.String"),
+                ColumnName = columnName
             }));
 
-            mainDataGrid.Items.Clear();
-            List<List<string>> rowsSource = new();
-            tableRows.ForEach(row => rowsSource.Add(row.GetAsDictionary()
-                                                       .Select(drow => drow.Value).ToList()));
-
-            mainDataGrid.ItemsSource = rowsSource;
+            tableRows.ForEach(baseRow =>
+            {
+                DataRow dataRow = dt.NewRow();
+                foreach (var rowDictionaryItem in baseRow.GetAsDictionary())
+                {
+                    dataRow[rowDictionaryItem.Key] = rowDictionaryItem.Value;
+                }
+                dt.Rows.Add(dataRow);
+            });
+            DataView view = new(dt);
+            _mainDataGrid.ItemsSource = view;
         }
     }
 }
