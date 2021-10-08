@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JDBWinClient.Views"
-        xmlns:page="clr-namespace:JDBWinClient.Views.Pages"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="JDB Addition" MinHeight="300" Height="350"  MinWidth="500" Width="600" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico">
