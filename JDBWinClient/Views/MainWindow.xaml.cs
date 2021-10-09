@@ -24,22 +24,21 @@ namespace JDBWinClient.Views
     public partial class MainWindow : Window
     {
         private BaseLogicDB _BaseLogicDB { get; set; } = new();
-        private string _currentTable = "";
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _BaseLogicDB.GenerateTreeView(ref DBTreeView, ref DBTableDataGrid, ref _currentTable);
+            _BaseLogicDB.GenerateTreeView(DBTreeView, DBTableDataGrid);
         }
 
         private void ReloadTreeButton_Click(object sender, RoutedEventArgs e)
         {
-            _BaseLogicDB.GenerateTreeView(ref DBTreeView, ref DBTableDataGrid, ref _currentTable);
+            _BaseLogicDB.GenerateTreeView(DBTreeView, DBTableDataGrid);
         }
         private void DialogWindowOfAddition_Click(object sender, RoutedEventArgs e)
         {
-            AdditionWindow additionWindow = new();
+            AdditionWindow additionWindow = new(_BaseLogicDB);
             additionWindow.ShowDialog();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JDBWinClient.Source;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,22 @@ namespace JDBWinClient.Views
     /// </summary>
     public partial class AdditionWindow : Window
     {
+        private readonly BaseLogicDB _BaseLogicDB;
+        private string _DatabaseField { get; set; }
+        private string _SchemeField { get; set; }
+        private string _TableField { get; set; }
+        private List<string> _RowFields { get; set; }
+
+
         public AdditionWindow()
         {
             InitializeComponent();
+            
+        }
+
+        internal AdditionWindow(BaseLogicDB BaseLogicDB) : this()
+        {
+            _BaseLogicDB = BaseLogicDB;
         }
     }
 }

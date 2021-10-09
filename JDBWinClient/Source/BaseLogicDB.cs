@@ -1,5 +1,6 @@
 ﻿using JDBSource;
 using JDBSource.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,11 +14,29 @@ namespace JDBWinClient.Source
     internal class BaseLogicDB
     {
         private List<Database> Databases { get; set; } = new();
+        public ITableWithReflectionAddition? CurrentTable { get; set; }
+
 
         public BaseLogicDB()
         {
             InitialDbs();
         }
+
+        public Database GetDatabase(string databaseName) => Databases
+                                                            .FirstOrDefault(db => db.GetName() == databaseName)
+                                                            ?? throw new Exception($"Data base with '{databaseName}' name not found.");
+
+        public IScheme GetScheme(string databaseName, string schemeName) => GetDatabase(databaseName)
+                                                                            .GetSchemes()
+                                                                            .FirstOrDefault(scheme => scheme.GetName() == schemeName)
+                                                                             ?? throw new Exception($"Scheme with '{schemeName}' name not found in '{databaseName}' data base.");
+
+        public ITable GetTable(string databaseName, string schemeName, string tableName) => GetScheme(databaseName, schemeName)
+                                                                                            .GetTables()
+                                                                                            .FirstOrDefault(table => table.GetName() == tableName)
+                                                                                             ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemeName}'.");
+
+
 
         public void InitialDbs()
         {
@@ -30,12 +49,12 @@ namespace JDBWinClient.Source
                    });
         }
 
-        public void GenerateTreeView(ref TreeView _treeView, ref DataGrid _mainDataGrid, ref string _currentTable)
+        /// <summary>
+        /// Params can be changed.
+        /// </summary>
+        public void GenerateTreeView(TreeView _treeView, DataGrid _mainDataGrid)
         {
-            DataGrid mainDataGrid = _mainDataGrid;
-            string currentTable = _currentTable;
-            TreeView treeView = _treeView;
-            treeView.Items.Clear();
+            _treeView.Items.Clear();
             Databases.ForEach(db =>
             {
                 TreeViewItem DB_TreeView = new();
@@ -48,28 +67,26 @@ namespace JDBWinClient.Source
                     {
                         TreeViewItem Table_TreeView = new();
                         Table_TreeView.Header = table.GetName();
-                        Table_TreeView.MouseDoubleClick += (object sender, MouseButtonEventArgs arg) => GenerateDataGrid(ref mainDataGrid, ref currentTable, table);
+                        Table_TreeView.MouseDoubleClick += (object sender, MouseButtonEventArgs arg) => GenerateDataGrid(_mainDataGrid, table);
                         Scheme_TreeView.Items.Add(Table_TreeView);
                     });
                     DB_TreeView.Items.Add(Scheme_TreeView);
                 });
-                treeView.Items.Add(DB_TreeView);
+                _treeView.Items.Add(DB_TreeView);
             });
         }
 
-        public void GenerateDataGrid(ref DataGrid _mainDataGrid, ref string _currentTable, ITableWithReflectionAddition _tableReflection)
+        public void GenerateDataGrid(DataGrid _mainDataGrid, ITableWithReflectionAddition _tableReflection)
         {
 
             _mainDataGrid.ClearValue(ItemsControl.ItemsSourceProperty);
             _mainDataGrid.Columns.Clear();
             _mainDataGrid.Items.Clear();
 
-            ITable _table = _tableReflection;
-            _currentTable = _table.GetName();
+            CurrentTable = _tableReflection;
 
-            List<string> tableColumnNames = _table.GetColumnNames();
-            List<JDBSource.Abstracts.BaseRow> tableRows = _table.GetRows();
-
+            List<string> tableColumnNames = _tableReflection.GetColumnNames();
+            List<JDBSource.Abstracts.BaseRow> tableRows = _tableReflection.GetRows();
 
             DataTable dt = new();
 
