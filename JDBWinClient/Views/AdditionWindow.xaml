@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="JDB Addition" MinHeight="300" Height="350"  MinWidth="500" Width="600" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel KeyDown="DockPanel_KeyDown">
+    <Grid KeyDown="DockPanel_KeyDown">
         <TabControl
             Name="LeftTabControl"
             Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
@@ -194,7 +194,7 @@
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="100" />
                                 <ColumnDefinition Width="100" />
-                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <ComboBox
                                 Name="Row_BasedataComboBox"
@@ -224,15 +224,30 @@
                                 SelectedValue="{Binding TableField}"
                                 ItemsSource="{Binding GetTableNames}" />
                         </Grid>
-                        <Grid 
-                            Name="RowGrid" 
-                            Grid.Row="1" 
-                            />
+
+                        <DataGrid
+                            Name="DBTableDataGrid"
+                            Margin="10"
+                            Grid.Row="1"
+                            CanUserAddRows="True"
+                            CanUserDeleteRows="False"
+                            CanUserReorderColumns="False"
+                            CanUserResizeColumns="True"
+                            CanUserResizeRows="True"
+                            CanUserSortColumns="False"
+                            materialDesign:DataGridAssist.CellPadding="15"
+                            materialDesign:DataGridAssist.ColumnHeaderPadding="15" />
+
                         <!--GENERATE RowGrid (ROW fields) FOR FILL DATA-->
                     </Grid>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
+        <materialDesign:Snackbar
+            Grid.Row="1"
+            Name="Snackbar"
+            Message="{Binding SSnackbarMessage}"
+            IsActive="{Binding SSnackbarVisible}" />
         <Button
             Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
             Command="{Binding CreateNewEnvironmentCommand}"
@@ -240,5 +255,6 @@
             HorizontalAlignment="Right"
             Margin="0 0 10 10"
             Content="{materialDesign:PackIcon Kind=Plus, Size=25}" />
-    </DockPanel>
+
+    </Grid>
 </Window>

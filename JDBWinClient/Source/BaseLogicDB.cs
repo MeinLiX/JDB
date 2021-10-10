@@ -13,13 +13,13 @@ namespace JDBWinClient.Source
 {
     internal class BaseLogicDB
     {
-        private List<Database> Databases { get; set; } = new();
+        internal List<Database> Databases { get; private set; } = new();
         public ITableWithReflectionAddition? CurrentTable { get; set; }
 
 
         public BaseLogicDB()
         {
-            InitialDbs();
+            //InitialDbs();
         }
 
         #region DBcommands
@@ -51,6 +51,7 @@ namespace JDBWinClient.Source
 
         public void InitialDbs()
         {
+            Databases.Clear();
             JStream.ReadDBsName()
                    .ForEach(dbName =>
                    {
@@ -65,6 +66,7 @@ namespace JDBWinClient.Source
         /// </summary>
         public void GenerateTreeView(TreeView _treeView, DataGrid _mainDataGrid)
         {
+            InitialDbs();
             _treeView.Items.Clear();
             Databases.ForEach(db =>
             {
