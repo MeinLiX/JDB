@@ -16,4 +16,10 @@
 # Db files :)
 *.db.json
 
+# User-specific files
 *.user
+
+# Click-Once
+publish/
+PublishProfiles/
+*.pubxml
