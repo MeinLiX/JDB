@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:JDBWinClient.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="JDB Addition" MinHeight="300" Height="350"  MinWidth="500" Width="600" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico">
+        Title="JDB Addition" MinHeight="300" Height="350"  MinWidth="500" Width="600" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel>
         <TabControl
             Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
@@ -34,9 +35,26 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <Grid>
-                        <TextBlock>
-                            <Run Text="Tab Database"/>
-                        </TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox
+                                Name="Database_DatabaseTextBox"
+                                Grid.Column="0"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Database"
+                                materialDesign:HintAssist.HelperText="Enter database"
+                                Text="{Binding DatabaseField}"/>
+                        </Grid>
                     </Grid>
                 </TabItem.Content>
             </TabItem>
@@ -57,9 +75,35 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <Grid>
-                        <TextBlock>
-                            <Run Text="Tab Scheme"/>
-                        </TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox
+                                Name="Scheme_BasedataComboBox"
+                                Grid.Column="0"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Datebase"
+                                materialDesign:HintAssist.HelperText="Select datebase"
+                                SelectedValue="{Binding DatabaseField}"
+                                ItemsSource="{Binding GetDatabaseNames}" />
+                            <TextBox
+                                Name="Scheme_SchemeTextBox"
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Scheme"
+                                materialDesign:HintAssist.HelperText="Enter scheme"
+                                Text="{Binding SchemeField}"/>
+                        </Grid>
                     </Grid>
                 </TabItem.Content>
             </TabItem>
@@ -80,9 +124,45 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <Grid>
-                        <TextBlock>
-                            <Run Text="Tab Table"/>
-                        </TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox
+                                Name="Table_BasedataComboBox"
+                                Grid.Column="0"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Datebase"
+                                materialDesign:HintAssist.HelperText="Select datebase"
+                                SelectedValue="{Binding DatabaseField}"
+                                ItemsSource="{Binding GetDatabaseNames}" />
+                            <ComboBox
+                                Name="Table_SchemeComboBox"
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Scheme"
+                                materialDesign:HintAssist.HelperText="Select scheme"
+                                SelectedValue="{Binding SchemeField}"
+                                ItemsSource="{Binding GetSchemeNames}" />
+                            <TextBox
+                                Name="Table_TableTextBox"
+                                Grid.Column="2"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Table"
+                                materialDesign:HintAssist.HelperText="Enter table"
+                                Text="{Binding TableField}"/>
+                        </Grid>
                     </Grid>
                 </TabItem.Content>
             </TabItem>
@@ -103,12 +183,61 @@
                 </TabItem.Header>
                 <TabItem.Content>
                     <Grid>
-                        <TextBlock>
-                            <Run Text="Tab Row"/>
-                        </TextBlock>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox
+                                Name="Row_BasedataComboBox"
+                                Grid.Column="0"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Datebase"
+                                materialDesign:HintAssist.HelperText="Select datebase"
+                                SelectedValue="{Binding DatabaseField}"
+                                ItemsSource="{Binding GetDatabaseNames}" />
+                            <ComboBox
+                                Name="Row_SchemeComboBox"
+                                Grid.Column="1"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Scheme"
+                                materialDesign:HintAssist.HelperText="Select scheme"
+                                SelectedValue="{Binding SchemeField}"
+                                ItemsSource="{Binding GetSchemeNames}" />
+                            <ComboBox
+                                Name="Row_TableComboBox"
+                                Grid.Column="2"
+                                VerticalAlignment="Bottom"
+                                Margin="5,0"
+                                materialDesign:HintAssist.Hint="Table"
+                                materialDesign:HintAssist.HelperText="Select table"
+                                SelectedValue="{Binding TableField}"
+                                ItemsSource="{Binding GetTableNames}" />
+                        </Grid>
+                        <Grid 
+                            Name="RowGrid" 
+                            Grid.Row="1" 
+                            />
+                        <!--GENERATE RowGrid (ROW fields) FOR FILL DATA-->
                     </Grid>
                 </TabItem.Content>
             </TabItem>
         </TabControl>
+        <Button
+            Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+            Command="{Binding CreateNewEnvironmentCommand}"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            Margin="0 0 10 10"
+            Content="{materialDesign:PackIcon Kind=Plus, Size=25}" />
     </DockPanel>
 </Window>
