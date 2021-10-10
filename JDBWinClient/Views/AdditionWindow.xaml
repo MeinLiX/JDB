@@ -8,8 +8,9 @@
         mc:Ignorable="d"
         Title="JDB Addition" MinHeight="300" Height="350"  MinWidth="500" Width="600" BorderBrush="#FFEAE5FF" Icon="/Content/JDB.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel>
+    <DockPanel KeyDown="DockPanel_KeyDown">
         <TabControl
+            Name="LeftTabControl"
             Style="{StaticResource MaterialDesignNavigatilRailTabControl}"
             BorderThickness="0"
             BorderBrush="Transparent"
@@ -18,7 +19,7 @@
             materialDesign:ColorZoneAssist.Mode="Standard"
             SnapsToDevicePixels="True"
             materialDesign:NavigationRailAssist.ShowSelectionBackground="True">
-            <TabItem>
+            <TabItem Name="DatabaseTabItem">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -58,7 +59,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem>
+            <TabItem Name="SchemeTabItem">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -107,7 +108,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem>
+            <TabItem Name="TableTabItem">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -166,7 +167,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem>
+            <TabItem Name="RowTabItem">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"

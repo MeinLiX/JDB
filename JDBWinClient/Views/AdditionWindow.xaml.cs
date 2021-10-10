@@ -103,13 +103,19 @@ namespace JDBWinClient.Views
         #region Create new environment command
         public ICommand CreateNewEnvironmentCommand { get; }
 
-        private bool CanCreateNewEnvironmentCommandExecute(object p)
+        private bool CanCreateNewEnvironmentCommandExecute(object p) => (LeftTabControl?.SelectedItem as TabItem)?.Name switch
         {
-            return true;//TODO
-        }
+            "DatabaseTabItem" => CanDatabaseTab(),
+            "SchemeTabItem" => CanSchemeTab(),
+            "TableTabItem" => CanTableTab(),
+            "RowTabItem" => CanRowTab(),
+            _ => false
+        };
+
 
         private void OnCreateNewEnvironmentCommandExecute(object p)
         {
+            var tab = LeftTabControl;
             //TODO
         }
         #endregion
@@ -119,8 +125,9 @@ namespace JDBWinClient.Views
         #region Constructor
         public AdditionWindow()
         {
-            InitializeComponent();
             CreateNewEnvironmentCommand = new LambdaCommand(OnCreateNewEnvironmentCommandExecute, CanCreateNewEnvironmentCommandExecute);
+            InitializeComponent();
+
         }
 
         internal AdditionWindow(BaseLogicDB BaseLogicDB) : this()
@@ -129,6 +136,41 @@ namespace JDBWinClient.Views
             UpdateDBnames();
         }
         #endregion
+
+        private bool CanDatabaseTab()
+        {
+            try
+            {
+                _BaseLogicDB.GetDatabase(DatabaseField);
+                return false;
+            }
+            catch { } //(Exception e) { MessageBox.Show(e.Message, "Error"); }
+            return true;
+        }
+        private bool CanSchemeTab()
+        {
+            try
+            {
+                _BaseLogicDB.GetScheme(DatabaseField, SchemeField);
+                return false;
+            }
+            catch { }
+            return true;
+        }
+        private bool CanTableTab()
+        {
+            try
+            {
+                _BaseLogicDB.GetTable(DatabaseField, SchemeField, TableField);
+                return false;
+            }
+            catch { }
+            return true;
+        }
+        private bool CanRowTab()
+        {
+            return false;
+        }
 
         #region ChangeEvent
 #pragma warning disable CS8612 // Nullability of reference types in type doesn't match implicitly implemented member.
@@ -148,5 +190,13 @@ namespace JDBWinClient.Views
             return true;
         }
         #endregion
+
+        private void DockPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                (LeftTabControl?.SelectedItem as TabItem)?.Focus();
+            }
+        }
     }
 }
