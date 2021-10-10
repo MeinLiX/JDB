@@ -5,6 +5,6 @@ namespace JDBSource.Interfaces
     public interface IUpperEnviroment<UE>
     {
         internal void SetUE(UE upperEnviroment);
-        internal UE GetUE();
+        UE GetUE();
     }
 }

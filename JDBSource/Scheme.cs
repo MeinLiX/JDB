@@ -53,10 +53,11 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => SchemeName = name;
 
-        IDatabase IUpperEnviroment<IDatabase>.GetUE() => Database;
         void IUpperEnviroment<IDatabase>.SetUE(IDatabase database) => Database = database;
 
         #endregion
+
+        IDatabase IUpperEnviroment<IDatabase>.GetUE() => Database;
 
         public string GetName() => SchemeName;
 

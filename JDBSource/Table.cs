@@ -67,10 +67,11 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => TableName = name;
 
-        IScheme IUpperEnviroment<IScheme>.GetUE() => Scheme;
         void IUpperEnviroment<IScheme>.SetUE(IScheme scheme) => Scheme = scheme;
 
         #endregion
+
+        IScheme IUpperEnviroment<IScheme>.GetUE() => Scheme;
 
         public string GetName() => TableName;
         public string GetSuffix() => FileTypes.Table_suffix.Get();

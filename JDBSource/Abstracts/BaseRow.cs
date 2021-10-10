@@ -31,10 +31,12 @@ namespace JDBSource.Abstracts
 
         #region Internal
 
-        ITableWithReflectionAddition IUpperEnviroment<ITableWithReflectionAddition>.GetUE() => Table;
         void IUpperEnviroment<ITableWithReflectionAddition>.SetUE(ITableWithReflectionAddition table) => Table = table;
 
         #endregion
+
+        ITableWithReflectionAddition IUpperEnviroment<ITableWithReflectionAddition>.GetUE() => Table;
+
 
         public string this[string columnName]
         {
