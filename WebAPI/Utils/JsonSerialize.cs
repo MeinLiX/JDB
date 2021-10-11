@@ -1,4 +1,6 @@
-﻿namespace JDBWebAPI.Utils
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace JDBWebAPI.Utils
 {
     public class JsonSerialize
     {
@@ -35,5 +37,20 @@
             success = Success(data) && _success,
             Time,
         };
+
+        public static IActionResult ResponseTemplate(Func<IActionResult> func)
+        {
+            try
+            {
+                return func.Invoke();
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(ErrorMessageText(e.Message))
+                {
+                    StatusCode = StatusCodes.Status200OK
+                };
+            }
+        }
     }
 }
