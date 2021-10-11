@@ -1,5 +1,7 @@
-var builder = WebApplication.CreateBuilder(args);
+using JDBWebAPI.Services;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<DatabaseLogicService>(new DatabaseLogicService());
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
