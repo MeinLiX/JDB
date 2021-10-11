@@ -24,7 +24,8 @@ namespace JDBWebAPI.Controllers.JDB
                     JsonSerialize.Data(new
                     {
                         tables = _dbLogic.GetTableNames(database, scheme)
-                    }))
+                    }, $"Execude '{database}'->'{scheme}'."
+                ))
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
