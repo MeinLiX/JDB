@@ -385,5 +385,7 @@ namespace JDBSource
         }
 
         public List<string> GetColumnNames() => ColumnTypes.Select(column => column.Key).ToList();
+
+        public Dictionary<string, string> GetOptions() => ColumnTypes;
     }
 }

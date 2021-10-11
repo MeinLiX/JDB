@@ -16,6 +16,12 @@ namespace JDBSource.Interfaces
         /// <param name="optionModel">key=name, value=type</param>
         void SetOptions(Dictionary<string, string> optionModel);
 
+        /// <summary>
+        /// Get the options
+        /// </summary>
+        /// <returns>key=name, value=type</returns>
+        Dictionary<string, string> GetOptions();
+
         List<string> GetColumnNames();
 
         void AddRow(BaseRow row);
