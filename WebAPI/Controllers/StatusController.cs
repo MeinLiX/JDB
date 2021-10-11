@@ -17,7 +17,7 @@ namespace JDBWebAPI.Controllers
         /// <summary>
         /// Check server activity.
         /// </summary>
-        [HttpGet("/ping")]
+        [HttpGet("ping")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult Ping() => new JsonResult(JsonSerialize.MessageText("Pong!"))
         {
