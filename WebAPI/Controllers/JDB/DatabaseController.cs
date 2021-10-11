@@ -1,4 +1,5 @@
 ﻿using JDBWebAPI.Services;
+using JDBWebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JDBWebAPI.Controllers.JDB
@@ -15,5 +16,19 @@ namespace JDBWebAPI.Controllers.JDB
             _logger = logger;
             _dbLogic = dbLogic;
         }
+
+        [HttpGet("database")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetDatabase() => JsonSerialize.ResponseTemplate(
+                () => new JsonResult(
+                    JsonSerialize.Data(new
+                    {
+                        databases = _dbLogic.GetDatabaseNames()
+                    }
+                ))
+                {
+                    StatusCode = StatusCodes.Status200OK
+                });
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using JDBWebAPI.Services;
+using JDBWebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JDBWebAPI.Controllers.JDB
@@ -15,5 +16,18 @@ namespace JDBWebAPI.Controllers.JDB
             _logger = logger;
             _dbLogic = dbLogic;
         }
+
+        [HttpGet("database/{database}/scheme")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetScheme(string database) => JsonSerialize.ResponseTemplate(
+               () => new JsonResult(
+                   JsonSerialize.Data(new
+                   {
+                       shcemes = _dbLogic.GetSchemeNames(database)
+                   }
+               ))
+               {
+                   StatusCode = StatusCodes.Status200OK
+               });
     }
 }

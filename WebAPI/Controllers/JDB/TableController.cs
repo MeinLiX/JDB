@@ -1,5 +1,5 @@
 ﻿using JDBWebAPI.Services;
-using Microsoft.AspNetCore.Http;
+using JDBWebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JDBWebAPI.Controllers.JDB
@@ -16,5 +16,17 @@ namespace JDBWebAPI.Controllers.JDB
             _logger = logger;
             _dbLogic = dbLogic;
         }
+
+        [HttpGet("database/{database}/scheme/{scheme}/table")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetTable(string database, string scheme) => JsonSerialize.ResponseTemplate(
+                () => new JsonResult(
+                    JsonSerialize.Data(new
+                    {
+                        tables = _dbLogic.GetTableNames(database, scheme)
+                    }))
+                {
+                    StatusCode = StatusCodes.Status200OK
+                });
     }
 }
