@@ -29,5 +29,18 @@ namespace JDBWebAPI.Controllers.JDB
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
+
+        [HttpGet("database/{database}/scheme/{scheme}/table/{table}/columns")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetColumns(string database, string scheme,string table) => JsonSerialize.ResponseTemplate(
+                () => new JsonResult(
+                    JsonSerialize.Data(new
+                    {
+                        colums = _dbLogic.GetTable(database, scheme,table)?.GetOptions()
+                    }, $"Execude '{database}'->'{scheme}'->'{table}'."
+                ))
+                {
+                    StatusCode = StatusCodes.Status200OK
+                });
     }
 }
