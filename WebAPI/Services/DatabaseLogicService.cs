@@ -49,5 +49,48 @@ namespace JDBWebAPI.Services
                                                                                             .FirstOrDefault(table => table.GetName() == tableName)
                                                                                              ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemeName}'.");
         #endregion
+        public Database CreateDatamase(string databaseName)
+        {
+            try
+            {
+                if (Databases.FirstOrDefault(db => db.GetName() == databaseName) is not null) 
+                    throw new Exception($"Data base with '{databaseName}' name already exist.");
+
+                Database database = new(databaseName);
+                database.OpenConnection();
+                Databases.Add(database);
+                return database;
+            }
+            catch { throw; }
+        }
+
+        public IScheme CreateScheme(string databaseName, string schemeName)
+        {
+            try
+            {
+                Database db = GetDatabase(databaseName);
+                if(db.GetSchemes().FirstOrDefault(scheme => scheme.GetName() == schemeName) is not null) 
+                    throw new Exception($"Scheme with '{schemeName}' name already exist in '{databaseName}' data base.");
+
+                return db.AddScheme(schemeName);
+            }
+            catch { throw; }
+        }
+
+        //todo ADD options
+        public ITable CreateTable(string databaseName, string schemeName, string tableName)
+        {
+            try
+            {
+                IScheme scheme = GetScheme(databaseName,schemeName);
+                if (scheme.GetTables().FirstOrDefault(table => table.GetName() == tableName) is not null)
+                    throw new Exception($"Table with '{tableName}' name already exist in in '{databaseName}'->'{schemeName}'.");
+                
+                return scheme.AddTable(tableName);
+            }
+            catch { throw; }
+        }
+
+        //todo CreateRow
     }
 }
