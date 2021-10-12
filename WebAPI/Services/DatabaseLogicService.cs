@@ -1,5 +1,7 @@
 ﻿using JDBSource;
+using JDBSource.Abstracts;
 using JDBSource.Interfaces;
+using JDBWebAPI.Models;
 using JDBWebAPI.Utils;
 
 namespace JDBWebAPI.Services
@@ -53,7 +55,7 @@ namespace JDBWebAPI.Services
         {
             try
             {
-                if (Databases.FirstOrDefault(db => db.GetName() == databaseName) is not null) 
+                if (Databases.FirstOrDefault(db => db.GetName() == databaseName) is not null)
                     throw new Exception($"Data base with '{databaseName}' name already exist.");
 
                 Database database = new(databaseName);
@@ -69,7 +71,7 @@ namespace JDBWebAPI.Services
             try
             {
                 Database db = GetDatabase(databaseName);
-                if(db.GetSchemes().FirstOrDefault(scheme => scheme.GetName() == schemeName) is not null) 
+                if (db.GetSchemes().FirstOrDefault(scheme => scheme.GetName() == schemeName) is not null)
                     throw new Exception($"Scheme with '{schemeName}' name already exist in '{databaseName}' data base.");
 
                 return db.AddScheme(schemeName);
@@ -82,15 +84,51 @@ namespace JDBWebAPI.Services
         {
             try
             {
-                IScheme scheme = GetScheme(databaseName,schemeName);
+                IScheme scheme = GetScheme(databaseName, schemeName);
                 if (scheme.GetTables().FirstOrDefault(table => table.GetName() == tableName) is not null)
                     throw new Exception($"Table with '{tableName}' name already exist in in '{databaseName}'->'{schemeName}'.");
-                
+
                 return scheme.AddTable(tableName);
             }
             catch { throw; }
         }
 
-        //todo CreateRow
+        public BaseRow CreateRow(string databaseName, string schemeName, string tableName, List<NameValue> row)
+        {
+            try
+            {
+                ITable table = GetTable(databaseName, schemeName, tableName);
+                BaseRow baserow = table.GetRowTemplate();
+                if (baserow.GetAsDictionary().Count != row.Count)
+                    throw new Exception($"Not all (or extra) columns are specified in '{databaseName}'->'{schemeName}'->'{tableName}'.");
+
+                row.ForEach(row =>
+                {
+                    try
+                    {
+                        baserow[row.Name] = row.Value;
+                    }
+                    catch { throw new Exception($"Column '{row.Name}' not contains in '{databaseName}'->'{schemeName}'->'{tableName}'"); }
+                });
+                table.AddRow(baserow);
+                table.Save();
+                return baserow;
+            }
+            catch { throw; }
+        }
+
+        public BaseRow DeleteRow(string databaseName, string schemeName, string tableName, string _idRow)
+        {
+            try
+            {
+                ITable table = GetTable(databaseName, schemeName, tableName);
+                BaseRow baserow = table.GetRows().FirstOrDefault(row => row["_id"] == _idRow) ?? throw new Exception($"Row with '{_idRow}' id not found in '{databaseName}'->'{schemeName}'->'{tableName}'");
+                table.RemoveRows(new List<BaseRow>() { baserow });
+                table.Save();
+                return baserow;
+            }
+            catch { throw; }
+        }
+
     }
 }
