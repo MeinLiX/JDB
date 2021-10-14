@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JDBSource.Interfaces
 {
-    public interface ITable : ICommon, IUpperEnviroment<IScheme>
+    public interface ITable : ICommon, IUpperEnviroment<ISchema>
     {
         void Save(bool totalSave = false);
 
@@ -15,6 +15,12 @@ namespace JDBSource.Interfaces
         /// </summary>
         /// <param name="optionModel">key=name, value=type</param>
         void SetOptions(Dictionary<string, string> optionModel);
+
+        /// <summary>
+        /// Get the options
+        /// </summary>
+        /// <returns>key=name, value=type</returns>
+        Dictionary<string, string> GetOptions();
 
         List<string> GetColumnNames();
 

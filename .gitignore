@@ -15,6 +15,7 @@
 
 # Db files :)
 *.db.json
+*_JDB/
 
 # User-specific files
 *.user

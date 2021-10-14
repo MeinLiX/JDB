@@ -10,7 +10,7 @@ namespace JDBSource
 {
     public class Database : IDatabase
     {
-        private List<IScheme> Schemes { get; set; } = new();
+        private List<ISchema> Schemas { get; set; } = new();
 
         private string _databaseName;
         private string DatabaseName
@@ -72,7 +72,7 @@ namespace JDBSource
 
             try
             {
-                Schemes.AddRange(JReader.ReadSchemes(this));
+                Schemas.AddRange(JReader.ReadSchemas(this));
             }
             catch (Exception e)
             {
@@ -87,50 +87,50 @@ namespace JDBSource
             throw new NotImplementedException();
         }
 
-        public List<IScheme> GetSchemes() => Schemes;
+        public List<ISchema> GetSchemas() => Schemas;
 
-        public IScheme AddScheme(string schemeName)
+        public ISchema AddSchema(string schemaName)
         {
-            _ = schemeName ?? throw new ArgumentNullException();
+            _ = schemaName ?? throw new ArgumentNullException();
 
-            return AddScheme(new Scheme(schemeName, this));
+            return AddSchema(new Schema(schemaName, this));
         }
 
-        public IScheme AddScheme(IScheme scheme)
+        public ISchema AddSchema(ISchema schema)
         {
-            scheme.SetUE(this);
-            Schemes.Add(scheme);
+            schema.SetUE(this);
+            Schemas.Add(schema);
 
             try
             {
-                JWriter.WriteScheme(scheme);
+                JWriter.WriteSchema(schema);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR]:{ex.Message}");
-                Schemes.Remove(scheme);
+                Schemas.Remove(schema);
             }
 
 
-            return scheme;
+            return schema;
         }
 
 
-        public int RemoveScheme(List<IScheme> schemes)
+        public int RemoveSchema(List<ISchema> schemas)
         {
             int deletedCount = 0;
 
-            schemes = new(schemes);
+            schemas = new(schemas);
 
-            schemes.ForEach(schemeToDelete =>
+            schemas.ForEach(schemaToDelete =>
             {
-                IScheme scheme = Schemes.FirstOrDefault(s => s.GetName() == schemeToDelete.GetName() && s.GetUE() == this);
-                if (scheme != null)
+                ISchema schema = Schemas.FirstOrDefault(s => s.GetName() == schemaToDelete.GetName() && s.GetUE() == this);
+                if (schema != null)
                 {
-                    Schemes.Remove(scheme);
+                    Schemas.Remove(schema);
                     try
                     {
-                        JWriter.DeleteScheme(scheme);
+                        JWriter.DeleteSchema(schema);
                         deletedCount++;
                     }
                     catch (Exception ex)

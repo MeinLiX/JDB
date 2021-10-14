@@ -20,7 +20,7 @@ namespace JDBConsole
             Database database = new("super-test");
             database.OpenConnection();
 
-            database.RemoveScheme(database.GetSchemes());
+            database.RemoveSchema(database.GetSchemas());
 
             TestStart(database);
             TestWork(database);
@@ -28,15 +28,15 @@ namespace JDBConsole
 
         private static void TestStart(Database database)
         {
-            database.AddScheme(mydb);
-            database.AddScheme(myUserdb);
-            database.AddScheme(myUserdb);//Error, same scheme name
+            database.AddSchema(mydb);
+            database.AddSchema(myUserdb);
+            database.AddSchema(myUserdb);//Error, same schema name
 
-            IScheme myDBscheme = database.GetSchemes()
+            ISchema myDBschema = database.GetSchemas()
                                          .First(s => s.GetName() == myUserdb);
 
             #region user table
-            ITableWithReflectionAddition ut = myDBscheme.AddTable(myUserdbUserTable);
+            ITableWithReflectionAddition ut = myDBschema.AddTable(myUserdbUserTable);
 
             ut.SetOptions(new User());
             ut.SaveOptions();
@@ -62,7 +62,7 @@ namespace JDBConsole
             #endregion user table
 
             #region product table
-            ITableWithReflectionAddition ut2 = myDBscheme.AddTable(myUserdbProductTable);
+            ITableWithReflectionAddition ut2 = myDBschema.AddTable(myUserdbProductTable);
 
             ut2.SetOptions(new Product());
             ut2.SaveOptions();
@@ -78,10 +78,10 @@ namespace JDBConsole
 
         private static void TestWork(Database database)
         {
-            IScheme myDBscheme = database.GetSchemes().First(s => s.GetName() == myUserdb);
+            ISchema myDBschema = database.GetSchemas().First(s => s.GetName() == myUserdb);
 
-            ITableWithReflectionAddition ut = myDBscheme.GetTable(myUserdbUserTable); //or myDBscheme.GetTables().FirstOrDefault(t => t.GetName() == MyUserdbUserTable);
-            ITableWithReflectionAddition ut2 = myDBscheme.GetTable(myUserdbProductTable); //or myDBscheme.GetTables().FirstOrDefault(t => t.GetName() == MyUserdbProductTable);
+            ITableWithReflectionAddition ut = myDBschema.GetTable(myUserdbUserTable); //or myDBschema.GetTables().FirstOrDefault(t => t.GetName() == MyUserdbUserTable);
+            ITableWithReflectionAddition ut2 = myDBschema.GetTable(myUserdbProductTable); //or myDBschema.GetTables().FirstOrDefault(t => t.GetName() == MyUserdbProductTable);
 
             Console.WriteLine("\n\nShown User table rows;");
             ut.GetRows().ForEach(m => Console.WriteLine($"{m["_id"]}\t {m["UserName"]}\t {m["UserInt"]} {Environment.NewLine}"));

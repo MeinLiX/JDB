@@ -36,13 +36,13 @@ namespace JDBWinClient.Views
             }
         }
 
-        private string _schemeField = "";
-        public string SchemeField
+        private string _schemaField = "";
+        public string SchemaField
         {
-            get => _schemeField;
+            get => _schemaField;
             set
             {
-                if (Set(ref _schemeField, value))
+                if (Set(ref _schemaField, value))
                     UpdateDBnames();
             }
         }
@@ -64,10 +64,10 @@ namespace JDBWinClient.Views
             try { GetDatabaseNames = _BaseLogicDB.GetDatabaseNames(); }
             catch { GetDatabaseNames = new List<string>(); }
 
-            try { GetSchemeNames = _BaseLogicDB.GetSchemeNames(DatabaseField); }
-            catch { GetSchemeNames = new List<string>(); }
+            try { GetSchemaNames = _BaseLogicDB.GetSchemaNames(DatabaseField); }
+            catch { GetSchemaNames = new List<string>(); }
 
-            try { GetTableNames = _BaseLogicDB.GetTableNames(DatabaseField, SchemeField); }
+            try { GetTableNames = _BaseLogicDB.GetTableNames(DatabaseField, SchemaField); }
             catch { GetTableNames = new List<string>(); }
         }
 
@@ -78,11 +78,11 @@ namespace JDBWinClient.Views
             set => Set(ref _databaseNames, value);
         }
 
-        private List<string> _schemeNames = new();
-        public List<string> GetSchemeNames
+        private List<string> _schemaNames = new();
+        public List<string> GetSchemaNames
         {
-            get => _schemeNames;
-            set => Set(ref _schemeNames, value);
+            get => _schemaNames;
+            set => Set(ref _schemaNames, value);
         }
 
         private List<string> _tableNames = new();
@@ -141,7 +141,7 @@ namespace JDBWinClient.Views
         private bool CanCreateNewEnvironmentCommandExecute(object p) => (LeftTabControl?.SelectedItem as TabItem)?.Name switch
         {
             "DatabaseTabItem" => CanDatabaseTab(),
-            "SchemeTabItem" => CanSchemeTab(),
+            "SchemaTabItem" => CanSchemaTab(),
             "TableTabItem" => CanTableTab(),
             "RowTabItem" => CanRowTab(),
             _ => false
@@ -152,7 +152,7 @@ namespace JDBWinClient.Views
             _ = (LeftTabControl?.SelectedItem as TabItem)?.Name switch
             {
                 "DatabaseTabItem" => OnCreateDatabaseTab(),
-                "SchemeTabItem" => OnCreateSchemeTab(),
+                "SchemaTabItem" => OnCreateSchemaTab(),
                 "TableTabItem" => OnCreateTableTab(),
                 "RowTabItem" => OnCreateRowTab(),
                 _ => ShowSSackbar("Select tab", 1)
@@ -173,13 +173,13 @@ namespace JDBWinClient.Views
             catch (Exception e) { ShowSSackbar(e.Message, 2); }
             return Task.CompletedTask;
         }
-        private Task OnCreateSchemeTab()
+        private Task OnCreateSchemaTab()
         {
             try
             {
                 JDBSource.Database actualDB = _BaseLogicDB.GetDatabase(DatabaseField);
-                actualDB.AddScheme(SchemeField);
-                return ShowSSackbar($"Scheme '{SchemeField}' added to '{actualDB.GetName()}' database.", 2);
+                actualDB.AddSchema(SchemaField);
+                return ShowSSackbar($"Schema '{SchemaField}' added to '{actualDB.GetName()}' database.", 2);
             }
             catch (Exception e) { ShowSSackbar(e.Message, 2); }
             return Task.CompletedTask;
@@ -189,10 +189,10 @@ namespace JDBWinClient.Views
         {
             try
             {
-                IScheme actualScheme = _BaseLogicDB.GetScheme(DatabaseField, SchemeField);
-                actualScheme.AddTable(TableField);
+                ISchema actualSchema = _BaseLogicDB.GetSchema(DatabaseField, SchemaField);
+                actualSchema.AddTable(TableField);
                 //TODO adding options
-                return ShowSSackbar($"Table '{TableField}' added to '{actualScheme.GetUE().GetName()}'->'{actualScheme.GetName()}'.", 2);
+                return ShowSSackbar($"Table '{TableField}' added to '{actualSchema.GetUE().GetName()}'->'{actualSchema.GetName()}'.", 2);
             }
             catch (Exception e) { ShowSSackbar(e.Message, 2); }
             return Task.CompletedTask;
@@ -221,14 +221,14 @@ namespace JDBWinClient.Views
             catch { }
             return true;
         }
-        private bool CanSchemeTab()
+        private bool CanSchemaTab()
         {
             try
             {
                 if (!TextRefactor.ValidFiled(DatabaseField) ||
-                    !TextRefactor.ValidFiled(SchemeField))
+                    !TextRefactor.ValidFiled(SchemaField))
                 { return false; }
-                _BaseLogicDB.GetScheme(DatabaseField, SchemeField);
+                _BaseLogicDB.GetSchema(DatabaseField, SchemaField);
                 return false;
             }
             catch { }
@@ -239,23 +239,23 @@ namespace JDBWinClient.Views
             try
             {
                 if (!TextRefactor.ValidFiled(DatabaseField) ||
-                    !TextRefactor.ValidFiled(SchemeField) ||
+                    !TextRefactor.ValidFiled(SchemaField) ||
                     !TextRefactor.ValidFiled(TableField))
                 { return false; }
 
-                _BaseLogicDB.GetTable(DatabaseField, SchemeField, TableField);
+                _BaseLogicDB.GetTable(DatabaseField, SchemaField, TableField);
                 //TODO valid fields
                 return false;
             }
             catch { }
-            return !CanSchemeTab();
+            return !CanSchemaTab();
         }
         private bool CanRowTab()
         {
             try
             {
                 if (!TextRefactor.ValidFiled(DatabaseField) ||
-                    !TextRefactor.ValidFiled(SchemeField) ||
+                    !TextRefactor.ValidFiled(SchemaField) ||
                     !TextRefactor.ValidFiled(TableField))
                 { return false; }
                 //TODO valid fields
