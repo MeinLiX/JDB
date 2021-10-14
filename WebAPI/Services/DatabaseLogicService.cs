@@ -51,7 +51,8 @@ namespace JDBWebAPI.Services
                                                                                             .FirstOrDefault(table => table.GetName() == tableName)
                                                                                              ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemeName}'.");
         #endregion
-        public Database CreateDatamase(string databaseName)
+        #region Databases
+        public Database CreateDatabase(string databaseName)
         {
             try
             {
@@ -65,7 +66,21 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
+       
+        public Database DeleteDatabase(string databaseName)
+        {
+            try
+            {
+                Database database = GetDatabase(databaseName);
 
+                Databases.Remove(database);//TODO (supported by library) TOTAL delete DB  (not local like this)
+
+                return database;
+            }
+            catch { throw; }
+        }
+        #endregion Databases
+        #region Scheme
         public IScheme CreateScheme(string databaseName, string schemeName)
         {
             try
@@ -78,7 +93,7 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
-
+        #endregion Scheme
         #region Tables
         public ITable CreateTable(string databaseName, string schemeName, string tableName)
         {
