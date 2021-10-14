@@ -79,7 +79,7 @@ namespace JDBWebAPI.Services
             catch { throw; }
         }
 
-        //todo ADD options
+        #region Tables
         public ITable CreateTable(string databaseName, string schemeName, string tableName)
         {
             try
@@ -92,7 +92,36 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
+        public ITable CreateTableOptions(string databaseName, string schemeName, string tableName, List<NameType> columns)
+        {
+            try
+            {
+                ITable table = GetTable(databaseName, schemeName, tableName);
+                Dictionary<string, string> options = new();
+                columns.ForEach(column => options.Add(column.Name, column.Type));
 
+                table.SetOptions(options);
+                table.SaveOptions();
+
+                return table;
+            }
+            catch { throw; }
+        }
+        public ITable DeleteTable(string databaseName, string schemeName, string tableName)
+        {
+            try
+            {
+                IScheme scheme = GetScheme(databaseName, schemeName);
+                ITable table = GetTable(databaseName, schemeName, tableName);
+
+                scheme.RemoveTables(new() { table as ITableWithReflectionAddition });
+
+                return table;
+            }
+            catch { throw; }
+        }
+        #endregion Tables
+        #region Rows
         public BaseRow CreateRow(string databaseName, string schemeName, string tableName, List<NameValue> row)
         {
             try
@@ -129,6 +158,6 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
-
+        #endregion Rows
     }
 }
