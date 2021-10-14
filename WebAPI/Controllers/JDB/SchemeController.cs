@@ -29,5 +29,31 @@ namespace JDBWebAPI.Controllers.JDB
                {
                    StatusCode = StatusCodes.Status200OK
                });
+        
+        [HttpPost("database/{database}/scheme/{scheme}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult PostScheme(string database, string scheme) => JsonSerialize.ResponseTemplate(
+               () => new JsonResult(
+                   JsonSerialize.Data(new
+                   {
+                       shcemes = _dbLogic.CreateScheme(database,scheme).GetName()
+                   }, $"Scheme added. Execude '{database}'."
+               ))
+               {
+                   StatusCode = StatusCodes.Status200OK
+               });
+
+        [HttpDelete("database/{database}/scheme/{scheme}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult DeleteScheme(string database, string scheme) => JsonSerialize.ResponseTemplate(
+               () => new JsonResult(
+                   JsonSerialize.Data(new
+                   {
+                       shcemes = _dbLogic.DeleteScheme(database, scheme).GetName()
+                   }, $"Scheme deleted. Execude '{database}'."
+               ))
+               {
+                   StatusCode = StatusCodes.Status200OK
+               });
     }
 }

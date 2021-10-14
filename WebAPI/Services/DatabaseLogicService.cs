@@ -66,7 +66,7 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
-       
+
         public Database DeleteDatabase(string databaseName)
         {
             try
@@ -90,6 +90,19 @@ namespace JDBWebAPI.Services
                     throw new Exception($"Scheme with '{schemeName}' name already exist in '{databaseName}' data base.");
 
                 return db.AddScheme(schemeName);
+            }
+            catch { throw; }
+        }
+
+        public IScheme DeleteScheme(string databaseName, string schemeName)
+        {
+            try
+            {
+                Database db = GetDatabase(databaseName);
+                IScheme scheme = GetScheme(databaseName, schemeName);
+                db.RemoveScheme(new() { scheme });
+
+                return scheme;
             }
             catch { throw; }
         }
