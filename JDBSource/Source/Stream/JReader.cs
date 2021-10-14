@@ -10,45 +10,45 @@ namespace JDBSource.Source.Stream
 {
     internal class JReader
     {
-        public static List<Scheme> ReadSchemes([NotNull] Database database)
+        public static List<Schema> ReadSchemas([NotNull] Database database)
         {
             try
             {
                 string pathDirr = database.GetPath();
                 List<string> ISchameNamesDirr = Directory.GetDirectories(pathDirr).ToList();
 
-                List<Scheme> schemes = ISchameNamesDirr
-                    .Select(scheme => new Scheme(scheme.Split("_")[^2].Split("\\")[^1], database))
+                List<Schema> schemas = ISchameNamesDirr
+                    .Select(schema => new Schema(schema.Split("_")[^2].Split("\\")[^1], database))
                     .ToList();
 
-                foreach (var scheme in schemes)
-                    foreach (var table in ReadTables(scheme))
+                foreach (var schema in schemas)
+                    foreach (var table in ReadTables(schema))
                     {
-                        scheme.AddTable(table);
+                        schema.AddTable(table);
                     }
 
 
 
 
-                return schemes;
+                return schemas;
             }
             catch { throw; }
         }
 
-        public static List<Table> ReadTables([NotNull] Scheme scheme)
+        public static List<Table> ReadTables([NotNull] Schema schema)
         {
             try
             {
                 List<Table> tablesResult = new();
-                string schemePathDirr = JStream.GetPath(scheme);
-                List<string> tablesNames = Directory.GetFiles(schemePathDirr)
+                string schemaPathDirr = JStream.GetPath(schema);
+                List<string> tablesNames = Directory.GetFiles(schemaPathDirr)
                                                     .Where(fileName => fileName.EndsWith(FileTypes.Table_suffix.Get()))
                                                     .Select(fileName => fileName.Split('\\')?[^1].Split('.')?[0])
                                                     .ToList();
 
                 tablesNames.ForEach(tableName =>
                 {
-                    Table table = new Table(tableName, scheme);
+                    Table table = new Table(tableName, schema);
                     ReadTable(table);
                     if (table is not null)
                         tablesResult.Add(table);

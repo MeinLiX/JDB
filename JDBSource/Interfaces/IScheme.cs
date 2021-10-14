@@ -2,9 +2,9 @@
 
 namespace JDBSource.Interfaces
 {
-    public interface IScheme : ICommon, IUpperEnviroment<IDatabase>
+    public interface ISchema : ICommon, IUpperEnviroment<IDatabase>
     {
-        IScheme Save();
+        ISchema Save();
 
         ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table);
         ITableWithReflectionAddition AddTable(string tableName);

@@ -59,7 +59,7 @@
                     </Grid>
                 </TabItem.Content>
             </TabItem>
-            <TabItem Name="SchemeTabItem">
+            <TabItem Name="SchemaTabItem">
                 <TabItem.Header>
                     <StackPanel
                         Height="auto"
@@ -70,7 +70,7 @@
                             Height="24"
                             HorizontalAlignment="Center" />
                         <TextBlock
-                            Text="Scheme"
+                            Text="Schema"
                             HorizontalAlignment="Center" />
                     </StackPanel>
                 </TabItem.Header>
@@ -88,7 +88,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ComboBox
-                                Name="Scheme_BasedataComboBox"
+                                Name="Schema_BasedataComboBox"
                                 Grid.Column="0"
                                 VerticalAlignment="Bottom"
                                 Margin="5,0"
@@ -97,13 +97,13 @@
                                 SelectedValue="{Binding DatabaseField}"
                                 ItemsSource="{Binding GetDatabaseNames}" />
                             <TextBox
-                                Name="Scheme_SchemeTextBox"
+                                Name="Schema_SchemaTextBox"
                                 Grid.Column="1"
                                 VerticalAlignment="Bottom"
                                 Margin="5,0"
-                                materialDesign:HintAssist.Hint="Scheme"
-                                materialDesign:HintAssist.HelperText="Enter scheme"
-                                Text="{Binding SchemeField}"/>
+                                materialDesign:HintAssist.Hint="Schema"
+                                materialDesign:HintAssist.HelperText="Enter schema"
+                                Text="{Binding SchemaField}"/>
                         </Grid>
                     </Grid>
                 </TabItem.Content>
@@ -147,14 +147,14 @@
                                 SelectedValue="{Binding DatabaseField}"
                                 ItemsSource="{Binding GetDatabaseNames}" />
                             <ComboBox
-                                Name="Table_SchemeComboBox"
+                                Name="Table_SchemaComboBox"
                                 Grid.Column="1"
                                 VerticalAlignment="Bottom"
                                 Margin="5,0"
-                                materialDesign:HintAssist.Hint="Scheme"
-                                materialDesign:HintAssist.HelperText="Select scheme"
-                                SelectedValue="{Binding SchemeField}"
-                                ItemsSource="{Binding GetSchemeNames}" />
+                                materialDesign:HintAssist.Hint="Schema"
+                                materialDesign:HintAssist.HelperText="Select schema"
+                                SelectedValue="{Binding SchemaField}"
+                                ItemsSource="{Binding GetSchemaNames}" />
                             <TextBox
                                 Name="Table_TableTextBox"
                                 Grid.Column="2"
@@ -206,14 +206,14 @@
                                 SelectedValue="{Binding DatabaseField}"
                                 ItemsSource="{Binding GetDatabaseNames}" />
                             <ComboBox
-                                Name="Row_SchemeComboBox"
+                                Name="Row_SchemaComboBox"
                                 Grid.Column="1"
                                 VerticalAlignment="Bottom"
                                 Margin="5,0"
-                                materialDesign:HintAssist.Hint="Scheme"
-                                materialDesign:HintAssist.HelperText="Select scheme"
-                                SelectedValue="{Binding SchemeField}"
-                                ItemsSource="{Binding GetSchemeNames}" />
+                                materialDesign:HintAssist.Hint="Schema"
+                                materialDesign:HintAssist.HelperText="Select schema"
+                                SelectedValue="{Binding SchemaField}"
+                                ItemsSource="{Binding GetSchemaNames}" />
                             <ComboBox
                                 Name="Row_TableComboBox"
                                 Grid.Column="2"

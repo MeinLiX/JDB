@@ -9,12 +9,12 @@ namespace JDBSource.Interfaces
         IDatabase OpenConnection();
         IDatabase CloseConnection();
 
-        IScheme AddScheme(string schemeName);
-        IScheme AddScheme(IScheme scheme);
+        ISchema AddSchema(string schemaName);
+        ISchema AddSchema(ISchema schema);
 
-        int RemoveScheme(List<IScheme> schemes);
+        int RemoveSchema(List<ISchema> schemas);
 
-        List<IScheme> GetSchemes();
+        List<ISchema> GetSchemas();
 
         //Task Save();
     }

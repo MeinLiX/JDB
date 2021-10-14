@@ -23,29 +23,29 @@ namespace JDBWinClient.Source
         }
 
         #region DBcommands
-        //public List<string> GetEnvironmentNames(List<ICommon> EnvironmentObjects)=> EnvironmentObjects.Select(db => db.GetName()).ToList(); //analog for GetDatabaseNames,GetSchemeNames,GetTableNames :)
+        //public List<string> GetEnvironmentNames(List<ICommon> EnvironmentObjects)=> EnvironmentObjects.Select(db => db.GetName()).ToList(); //analog for GetDatabaseNames,GetSchemaNames,GetTableNames :)
         public List<string> GetDatabaseNames() => Databases
                                                   .Select(db => db.GetName())
                                                   .ToList();
         public Database GetDatabase(string databaseName) => Databases
                                                             .FirstOrDefault(db => db.GetName() == databaseName)
                                                             ?? throw new Exception($"Data base with '{databaseName}' name not found.");
-        public List<string> GetSchemeNames(string databaseName) => GetDatabase(databaseName)
-                                                                  .GetSchemes()
-                                                                  .Select(scheme => scheme.GetName())
+        public List<string> GetSchemaNames(string databaseName) => GetDatabase(databaseName)
+                                                                  .GetSchemas()
+                                                                  .Select(schema => schema.GetName())
                                                                   .ToList();
-        public IScheme GetScheme(string databaseName, string schemeName) => GetDatabase(databaseName)
-                                                                            .GetSchemes()
-                                                                            .FirstOrDefault(scheme => scheme.GetName() == schemeName)
-                                                                             ?? throw new Exception($"Scheme with '{schemeName}' name not found in '{databaseName}' data base.");
-        public List<string> GetTableNames(string databaseName, string schemeName) => GetScheme(databaseName, schemeName)
+        public ISchema GetSchema(string databaseName, string schemaName) => GetDatabase(databaseName)
+                                                                            .GetSchemas()
+                                                                            .FirstOrDefault(schema => schema.GetName() == schemaName)
+                                                                             ?? throw new Exception($"Schema with '{schemaName}' name not found in '{databaseName}' data base.");
+        public List<string> GetTableNames(string databaseName, string schemaName) => GetSchema(databaseName, schemaName)
                                                                                      .GetTables()
                                                                                      .Select(table => table.GetName())
                                                                                      .ToList();
-        public ITable GetTable(string databaseName, string schemeName, string tableName) => GetScheme(databaseName, schemeName)
+        public ITable GetTable(string databaseName, string schemaName, string tableName) => GetSchema(databaseName, schemaName)
                                                                                             .GetTables()
                                                                                             .FirstOrDefault(table => table.GetName() == tableName)
-                                                                                             ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemeName}'.");
+                                                                                             ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemaName}'.");
         #endregion
 
 
@@ -72,18 +72,18 @@ namespace JDBWinClient.Source
             {
                 TreeViewItem DB_TreeView = new();
                 DB_TreeView.Header = db.GetName();
-                db.GetSchemes().ForEach(scheme =>
+                db.GetSchemas().ForEach(schema =>
                 {
-                    TreeViewItem Scheme_TreeView = new();
-                    Scheme_TreeView.Header = scheme.GetName();
-                    scheme.GetTables().ForEach(table =>
+                    TreeViewItem Schema_TreeView = new();
+                    Schema_TreeView.Header = schema.GetName();
+                    schema.GetTables().ForEach(table =>
                     {
                         TreeViewItem Table_TreeView = new();
                         Table_TreeView.Header = table.GetName();
                         Table_TreeView.MouseDoubleClick += (object sender, MouseButtonEventArgs arg) => GenerateDataGrid(_mainDataGrid, table);
-                        Scheme_TreeView.Items.Add(Table_TreeView);
+                        Schema_TreeView.Items.Add(Table_TreeView);
                     });
-                    DB_TreeView.Items.Add(Scheme_TreeView);
+                    DB_TreeView.Items.Add(Schema_TreeView);
                 });
                 _treeView.Items.Add(DB_TreeView);
             });

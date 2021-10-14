@@ -5,6 +5,6 @@ namespace JDBSource.Source.Stream
 {
     class JStream
     {
-        public static string GetPath([NotNull] IScheme scheme) => $@"{scheme.GetUE().GetPath()}\{scheme.GetName()}{FileTypes.Scheme_suffix.Get()}";
+        public static string GetPath([NotNull] ISchema schema) => $@"{schema.GetUE().GetPath()}\{schema.GetName()}{FileTypes.Schema_suffix.Get()}";
     }
 }

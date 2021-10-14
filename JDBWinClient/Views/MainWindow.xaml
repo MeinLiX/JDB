@@ -33,7 +33,7 @@
                             <MenuItem
                                 Header="Data base"/>
                             <MenuItem
-                                Header="Scheme"/>
+                                Header="Schema"/>
                             <MenuItem
                                 Header="Table"/>
                         </MenuItem>

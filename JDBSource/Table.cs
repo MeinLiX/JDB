@@ -14,13 +14,13 @@ namespace JDBSource
 
         internal Dictionary<string, string> ColumnTypes { get; set; } = new(); // "column_name" = "column_type"
 
-        private IScheme _scheme;
-        private IScheme Scheme
+        private ISchema _schema;
+        private ISchema Schema
         {
-            get => _scheme
+            get => _schema
                     ?? throw new NullReferenceException();
 
-            set => _scheme = value switch
+            set => _schema = value switch
             {
                 not null => value,
                 null => throw new NullReferenceException()
@@ -56,10 +56,10 @@ namespace JDBSource
 
         }
 
-        public Table(string name, IScheme scheme)
+        public Table(string name, ISchema schema)
             : this(name)
         {
-            Scheme = scheme;
+            Schema = schema;
         }
         #endregion
 
@@ -67,11 +67,11 @@ namespace JDBSource
 
         void ICommon.SetName(string name) => TableName = name;
 
-        void IUpperEnviroment<IScheme>.SetUE(IScheme scheme) => Scheme = scheme;
+        void IUpperEnviroment<ISchema>.SetUE(ISchema schema) => Schema = schema;
 
         #endregion
 
-        IScheme IUpperEnviroment<IScheme>.GetUE() => Scheme;
+        ISchema IUpperEnviroment<ISchema>.GetUE() => Schema;
 
         public string GetName() => TableName;
         public string GetSuffix() => FileTypes.Table_suffix.Get();

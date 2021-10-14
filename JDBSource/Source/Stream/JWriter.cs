@@ -10,48 +10,48 @@ namespace JDBSource.Source.Stream
 {
     class JWriter
     {
-        public static void WriteScheme([NotNull] IScheme scheme)
+        public static void WriteSchema([NotNull] ISchema schema)
         {
             try
             {
-                string pathDirr = JStream.GetPath(scheme);
+                string pathDirr = JStream.GetPath(schema);
 
                 if (Directory.Exists(pathDirr))
-                    throw new Exception($"[JW] {scheme.GetName()} already exists.");
+                    throw new Exception($"[JW] {schema.GetName()} already exists.");
 
                 Directory.CreateDirectory(pathDirr);
             }
             catch { throw; }
         }
 
-        public static void WriteScheme([NotNull] List<IScheme> schemes)
+        public static void WriteSchema([NotNull] List<ISchema> schemas)
         {
             try
             {
-                schemes.ForEach(scheme => WriteScheme(scheme));
+                schemas.ForEach(schema => WriteSchema(schema));
             }
             catch { throw; }
         }
 
-        public static void DeleteScheme([NotNull] IScheme scheme)
+        public static void DeleteSchema([NotNull] ISchema schema)
         {
             try
             {
-                string pathDirr = JStream.GetPath(scheme);
+                string pathDirr = JStream.GetPath(schema);
 
                 if (!Directory.Exists(pathDirr))
-                    throw new Exception($"[JW] {scheme.GetName()} does not exist.");
+                    throw new Exception($"[JW] {schema.GetName()} does not exist.");
 
                 Directory.Delete(pathDirr, true);
             }
             catch { throw; }
         }
 
-        public static void DeleteScheme([NotNull] List<IScheme> schemes)
+        public static void DeleteSchema([NotNull] List<ISchema> schemas)
         {
             try
             {
-                schemes.ForEach(scheme => DeleteScheme(scheme));
+                schemas.ForEach(schema => DeleteSchema(schema));
             }
             catch { throw; }
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace JDBSource.Interfaces
 {
-    public interface ITable : ICommon, IUpperEnviroment<IScheme>
+    public interface ITable : ICommon, IUpperEnviroment<ISchema>
     {
         void Save(bool totalSave = false);
 

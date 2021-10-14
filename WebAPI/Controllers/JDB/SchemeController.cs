@@ -6,51 +6,51 @@ namespace JDBWebAPI.Controllers.JDB
 {
     [Route("api")]
     [ApiController]
-    public class SchemeController : ControllerBase
+    public class SchemaController : ControllerBase
     {
-        private readonly ILogger<SchemeController> _logger;
+        private readonly ILogger<SchemaController> _logger;
         private readonly DatabaseLogicService _dbLogic;
 
-        public SchemeController(ILogger<SchemeController> logger, DatabaseLogicService dbLogic)
+        public SchemaController(ILogger<SchemaController> logger, DatabaseLogicService dbLogic)
         {
             _logger = logger;
             _dbLogic = dbLogic;
         }
 
-        [HttpGet("database/{database}/scheme")]
+        [HttpGet("database/{database}/schema")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetScheme(string database) => JsonSerialize.ResponseTemplate(
+        public IActionResult GetSchema(string database) => JsonSerialize.ResponseTemplate(
                () => new JsonResult(
                    JsonSerialize.Data(new
                    {
-                       shcemes = _dbLogic.GetSchemeNames(database)
+                       shcemes = _dbLogic.GetSchemaNames(database)
                    }, $"Execude '{database}'."
                ))
                {
                    StatusCode = StatusCodes.Status200OK
                });
 
-        [HttpPost("database/{database}/scheme/{scheme}")]
+        [HttpPost("database/{database}/schema/{schema}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult PostScheme(string database, string scheme) => JsonSerialize.ResponseTemplate(
+        public IActionResult PostSchema(string database, string schema) => JsonSerialize.ResponseTemplate(
                () => new JsonResult(
                    JsonSerialize.Data(new
                    {
-                       shcemes = _dbLogic.CreateScheme(database, scheme).GetName()
-                   }, $"Scheme added. Execude '{database}'."
+                       shcemes = _dbLogic.CreateSchema(database, schema).GetName()
+                   }, $"Schema added. Execude '{database}'."
                ))
                {
                    StatusCode = StatusCodes.Status200OK
                });
 
-        [HttpDelete("database/{database}/scheme/{scheme}")]
+        [HttpDelete("database/{database}/schema/{schema}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult DeleteScheme(string database, string scheme) => JsonSerialize.ResponseTemplate(
+        public IActionResult DeleteSchema(string database, string schema) => JsonSerialize.ResponseTemplate(
                () => new JsonResult(
                    JsonSerialize.Data(new
                    {
-                       shcemes = _dbLogic.DeleteScheme(database, scheme).GetName()
-                   }, $"Scheme deleted. Execude '{database}'."
+                       shcemes = _dbLogic.DeleteSchema(database, schema).GetName()
+                   }, $"Schema deleted. Execude '{database}'."
                ))
                {
                    StatusCode = StatusCodes.Status200OK

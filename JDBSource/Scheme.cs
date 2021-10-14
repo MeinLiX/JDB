@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace JDBSource
 {
-    public class Scheme : IScheme
+    public class Schema : ISchema
     {
         private List<ITableWithReflectionAddition> Tables { get; set; } = new();
 
@@ -24,13 +24,13 @@ namespace JDBSource
             };
         }
 
-        private string _schemeName;
-        private string SchemeName
+        private string _schemaName;
+        private string SchemaName
         {
-            get => _schemeName
+            get => _schemaName
                     ?? throw new NullReferenceException();
 
-            set => _schemeName = value switch
+            set => _schemaName = value switch
             {
                 not null => value,
                 null => throw new NullReferenceException()
@@ -39,10 +39,10 @@ namespace JDBSource
 
         #region Constructors
 
-        public Scheme(string schemeName) => SchemeName = schemeName;
+        public Schema(string schemaName) => SchemaName = schemaName;
 
-        public Scheme(string schemeName, IDatabase database)
-        : this(schemeName)
+        public Schema(string schemaName, IDatabase database)
+        : this(schemaName)
         {
             Database = database;
         }
@@ -51,7 +51,7 @@ namespace JDBSource
 
         #region Internal
 
-        void ICommon.SetName(string name) => SchemeName = name;
+        void ICommon.SetName(string name) => SchemaName = name;
 
         void IUpperEnviroment<IDatabase>.SetUE(IDatabase database) => Database = database;
 
@@ -59,9 +59,9 @@ namespace JDBSource
 
         IDatabase IUpperEnviroment<IDatabase>.GetUE() => Database;
 
-        public string GetName() => SchemeName;
+        public string GetName() => SchemaName;
 
-        public string GetSuffix() => FileTypes.Scheme_suffix.Get();
+        public string GetSuffix() => FileTypes.Schema_suffix.Get();
 
         public ITableWithReflectionAddition AddTable(ITableWithReflectionAddition table)
         {
@@ -99,7 +99,7 @@ namespace JDBSource
             });
         }
 
-        public IScheme Save()
+        public ISchema Save()
         {
             try
             {
