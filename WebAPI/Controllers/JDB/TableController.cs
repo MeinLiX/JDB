@@ -30,27 +30,27 @@ namespace JDBWebAPI.Controllers.JDB
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
-        
+
         [HttpPost("database/{database}/scheme/{scheme}/table/{table}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostTable(string database, string scheme, string table) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        table = _dbLogic.CreateTable(database, scheme,table)?.GetName()
+                        table = _dbLogic.CreateTable(database, scheme, table)?.GetName()
                     }, $"Table added. Execude '{database}'->'{scheme}'."
                 ))
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
-        
+
         [HttpDelete("database/{database}/scheme/{scheme}/table/{table}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult DeleteTable(string database, string scheme, string table) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        table = _dbLogic.DeleteTable(database, scheme,table)?.GetName()
+                        table = _dbLogic.DeleteTable(database, scheme, table)?.GetName()
                     }, $"Table deleted. Execude '{database}'->'{scheme}'."
                 ))
                 {
@@ -59,24 +59,24 @@ namespace JDBWebAPI.Controllers.JDB
 
         [HttpGet("database/{database}/scheme/{scheme}/table/{table}/columns")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetColumns(string database, string scheme,string table) => JsonSerialize.ResponseTemplate(
+        public IActionResult GetColumns(string database, string scheme, string table) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        colums = _dbLogic.GetTable(database, scheme,table)?.GetOptions()
+                        colums = _dbLogic.GetTable(database, scheme, table)?.GetOptions()
                     }, $"Execude '{database}'->'{scheme}'->'{table}'."
                 ))
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
-        
+
         [HttpPost("database/{database}/scheme/{scheme}/table/{table}/columns")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult PostColumns(string database, string scheme,string table, [FromBody] List<NameType> columns) => JsonSerialize.ResponseTemplate(
+        public IActionResult PostColumns(string database, string scheme, string table, [FromBody] List<NameType> columns) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        colums = _dbLogic.CreateTableOptions(database, scheme,table,columns)?.GetOptions()
+                        colums = _dbLogic.CreateTableOptions(database, scheme, table, columns)?.GetOptions()
                     }, $"Columns added. Execude '{database}'->'{scheme}'->'{table}'."
                 ))
                 {

@@ -29,7 +29,7 @@ namespace JDBWebAPI.Controllers.JDB
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
-        
+
         [HttpPost("database/{database}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public IActionResult PostDatabase(string database) => JsonSerialize.ResponseTemplate(
@@ -55,6 +55,5 @@ namespace JDBWebAPI.Controllers.JDB
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
-
     }
 }

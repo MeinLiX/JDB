@@ -50,7 +50,7 @@ namespace JDBWebAPI.Services
                                                                                             .GetTables()
                                                                                             .FirstOrDefault(table => table.GetName() == tableName)
                                                                                              ?? throw new Exception($"Table with '{tableName}' name not found in '{databaseName}'->'{schemeName}'.");
-        #endregion
+
         #region Databases
         public Database CreateDatabase(string databaseName)
         {
@@ -80,6 +80,7 @@ namespace JDBWebAPI.Services
             catch { throw; }
         }
         #endregion Databases
+
         #region Scheme
         public IScheme CreateScheme(string databaseName, string schemeName)
         {
@@ -107,6 +108,7 @@ namespace JDBWebAPI.Services
             catch { throw; }
         }
         #endregion Scheme
+
         #region Tables
         public ITable CreateTable(string databaseName, string schemeName, string tableName)
         {
@@ -120,6 +122,7 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
+
         public ITable CreateTableOptions(string databaseName, string schemeName, string tableName, List<NameType> columns)
         {
             try
@@ -135,6 +138,7 @@ namespace JDBWebAPI.Services
             }
             catch { throw; }
         }
+
         public ITable DeleteTable(string databaseName, string schemeName, string tableName)
         {
             try
@@ -149,6 +153,7 @@ namespace JDBWebAPI.Services
             catch { throw; }
         }
         #endregion Tables
+
         #region Rows
         public BaseRow CreateRow(string databaseName, string schemeName, string tableName, List<NameValue> row)
         {
@@ -187,5 +192,7 @@ namespace JDBWebAPI.Services
             catch { throw; }
         }
         #endregion Rows
+
+        #endregion DBcommands
     }
 }
