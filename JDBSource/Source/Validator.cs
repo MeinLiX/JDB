@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace JDBSource.Source
 {
-    static class Validator
+    public static class Validator
     {
         public static List<string> SupportedTypes { get; private set; } = new() { "string", "int", "bool", "char", "realInvl" };
 

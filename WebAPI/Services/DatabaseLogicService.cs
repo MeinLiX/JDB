@@ -1,6 +1,7 @@
 ﻿using JDBSource;
 using JDBSource.Abstracts;
 using JDBSource.Interfaces;
+using JDBSource.Source;
 using JDBWebAPI.Models;
 using JDBWebAPI.Utils;
 
@@ -166,6 +167,14 @@ namespace JDBWebAPI.Services
 
                 row.ForEach(row =>
                 {
+                    string type = table.GetOptions()
+                                       .FirstOrDefault(option => option.Key == row.Name)
+                                       .Value
+                                       ?? throw new Exception($"Column '{row.Name}' not contains in '{databaseName}'->'{schemaName}'->'{tableName}'");
+
+                    if (!Validator.CheckType(row.Value, type))
+                        throw new Exception($"Column '{row.Name}'(value: '{row.Value}') must be '{type}'");
+
                     try
                     {
                         baserow[row.Name] = row.Value;
