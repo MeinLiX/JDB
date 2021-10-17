@@ -1,4 +1,5 @@
-﻿using JDBWebAPI.Services;
+﻿using JDBWebAPI.Models;
+using JDBWebAPI.Services;
 using JDBWebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,26 +31,26 @@ namespace JDBWebAPI.Controllers.JDB
                    StatusCode = StatusCodes.Status200OK
                });
 
-        [HttpPost("database/{database}/schema/{schema}")]
+        [HttpPost("database/{database}/schema")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult PostSchema(string database, string schema) => JsonSerialize.ResponseTemplate(
+        public IActionResult PostSchema(string database, [FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                () => new JsonResult(
                    JsonSerialize.Data(new
                    {
-                       shcemes = _dbLogic.CreateSchema(database, schema).GetName()
+                       shcemes = _dbLogic.CreateSchema(database, body.name).GetName()
                    }, $"Schema added. Execude '{database}'."
                ))
                {
                    StatusCode = StatusCodes.Status200OK
                });
 
-        [HttpDelete("database/{database}/schema/{schema}")]
+        [HttpDelete("database/{database}/schema")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult DeleteSchema(string database, string schema) => JsonSerialize.ResponseTemplate(
+        public IActionResult DeleteSchema(string database, [FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                () => new JsonResult(
                    JsonSerialize.Data(new
                    {
-                       shcemes = _dbLogic.DeleteSchema(database, schema).GetName()
+                       shcemes = _dbLogic.DeleteSchema(database, body.name).GetName()
                    }, $"Schema deleted. Execude '{database}'."
                ))
                {

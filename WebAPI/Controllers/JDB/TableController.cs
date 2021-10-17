@@ -31,26 +31,26 @@ namespace JDBWebAPI.Controllers.JDB
                     StatusCode = StatusCodes.Status200OK
                 });
 
-        [HttpPost("database/{database}/schema/{schema}/table/{table}")]
+        [HttpPost("database/{database}/schema/{schema}/table")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult PostTable(string database, string schema, string table) => JsonSerialize.ResponseTemplate(
+        public IActionResult PostTable(string database, string schema,[FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        table = _dbLogic.CreateTable(database, schema, table)?.GetName()
+                        table = _dbLogic.CreateTable(database, schema, body.name)?.GetName()
                     }, $"Table added. Execude '{database}'->'{schema}'."
                 ))
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
 
-        [HttpDelete("database/{database}/schema/{schema}/table/{table}")]
+        [HttpDelete("database/{database}/schema/{schema}/table")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult DeleteTable(string database, string schema, string table) => JsonSerialize.ResponseTemplate(
+        public IActionResult DeleteTable(string database, string schema, [FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        table = _dbLogic.DeleteTable(database, schema, table)?.GetName()
+                        table = _dbLogic.DeleteTable(database, schema, body.name)?.GetName()
                     }, $"Table deleted. Execude '{database}'->'{schema}'."
                 ))
                 {

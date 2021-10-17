@@ -1,4 +1,5 @@
-﻿using JDBWebAPI.Services;
+﻿using JDBWebAPI.Models;
+using JDBWebAPI.Services;
 using JDBWebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,26 +31,26 @@ namespace JDBWebAPI.Controllers.JDB
                     StatusCode = StatusCodes.Status200OK
                 });
 
-        [HttpPost("database/{database}")]
+        [HttpPost("database")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult PostDatabase(string database) => JsonSerialize.ResponseTemplate(
+        public IActionResult PostDatabase([FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        database = _dbLogic.CreateDatabase(database).GetName()
+                        database = _dbLogic.CreateDatabase(body.name).GetName()
                     }, $"Database added."
                 ))
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
 
-        [HttpDelete("database/{database}")]
+        [HttpDelete("database")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult DeleteDatabase(string database) => JsonSerialize.ResponseTemplate(
+        public IActionResult DeleteDatabase([FromBody] BodyName body) => JsonSerialize.ResponseTemplate(
                 () => new JsonResult(
                     JsonSerialize.Data(new
                     {
-                        database = _dbLogic.DeleteDatabase(database).GetName()
+                        database = _dbLogic.DeleteDatabase(body.name).GetName()
                     }, $"Database deleted."
                 ))
                 {
