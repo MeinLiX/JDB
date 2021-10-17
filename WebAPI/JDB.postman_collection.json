@@ -1,0 +1,619 @@
+{
+	"info": {
+		"_postman_id": "bdb9419f-430f-40eb-b2b1-82c096223190",
+		"name": "JDB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Status",
+			"item": [
+				{
+					"name": "ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Status/ping",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"Status",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Database",
+			"item": [
+				{
+					"name": "get databases",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/database",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add database",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{basedataNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete database",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{basedataNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Scheme",
+			"item": [
+				{
+					"name": "get schemes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add scheme",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{schemaNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete scheme",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{schemaNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Table",
+			"item": [
+				{
+					"name": "Columns",
+					"item": [
+						{
+							"name": "get columns",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/columns",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"database",
+										":database",
+										"schema",
+										":schema",
+										"table",
+										":table",
+										"columns"
+									],
+									"variable": [
+										{
+											"key": "database",
+											"value": "{{basedataNAME}}",
+											"description": "(Required) "
+										},
+										{
+											"key": "schema",
+											"value": "{{schemaNAME}}",
+											"description": "(Required) "
+										},
+										{
+											"key": "table",
+											"value": "{{tableNAME}}",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "set columns",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n    {\n        \"name\": \"_id\",\n        \"type\": \"int\"\n    },\n    {\n        \"name\": \"Name\",\n        \"type\": \"string\"\n    }\n]"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/columns",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"database",
+										":database",
+										"schema",
+										":schema",
+										"table",
+										":table",
+										"columns"
+									],
+									"variable": [
+										{
+											"key": "database",
+											"value": "{{basedataNAME}}",
+											"description": "(Required) "
+										},
+										{
+											"key": "schema",
+											"value": "{{schemaNAME}}",
+											"description": "(Required) "
+										},
+										{
+											"key": "table",
+											"value": "{{tableNAME}}",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get table",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add table",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{tableNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete table",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{tableNAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Row",
+			"item": [
+				{
+					"name": "get rows",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/row",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table",
+								":table",
+								"row"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "table",
+									"value": "{{tableNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add row",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n    {\n        \"name\": \"_id\",\n        \"value\": \"1\"\n    },\n    {\n        \"name\": \"Name\",\n        \"value\": \"Col1\"\n    }\n]"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/row",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table",
+								":table",
+								"row"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "table",
+									"value": "{{tableNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete row",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"_id\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/row",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table",
+								":table",
+								"row"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "table",
+									"value": "{{tableNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5555"
+		},
+		{
+			"key": "basedataNAME",
+			"value": "newTable"
+		},
+		{
+			"key": "schemaNAME",
+			"value": "myUserdbDB"
+		},
+		{
+			"key": "tableNAME",
+			"value": "Product"
+		}
+	]
+}
