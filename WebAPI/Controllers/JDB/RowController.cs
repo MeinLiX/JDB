@@ -56,5 +56,18 @@ namespace JDBWebAPI.Controllers.JDB
                 {
                     StatusCode = StatusCodes.Status200OK
                 });
+
+        [HttpDelete("database/{database}/schema/{schema}/table/{table}/row/same")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult PostRowSame(string database, string schema, string table) => JsonSerialize.ResponseTemplate(
+                () => new JsonResult(
+                    JsonSerialize.Data(new
+                    {
+                        rowsDeleted = _dbLogic.RemoveSameRows(database, schema, table)
+                    }, $"Execude '{database}'->'{schema}'->'{table}'."
+                ))
+                {
+                    StatusCode = StatusCodes.Status200OK
+                });
     }
 }

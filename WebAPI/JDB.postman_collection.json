@@ -574,6 +574,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "delete same rows",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/database/:database/schema/:schema/table/:table/row/same",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"database",
+								":database",
+								"schema",
+								":schema",
+								"table",
+								":table",
+								"row",
+								"same"
+							],
+							"variable": [
+								{
+									"key": "database",
+									"value": "{{basedataNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "schema",
+									"value": "{{schemaNAME}}",
+									"description": "(Required) "
+								},
+								{
+									"key": "table",
+									"value": "{{tableNAME}}",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -601,7 +648,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:5555"
+			"value": "localhost:5555"
 		},
 		{
 			"key": "basedataNAME",

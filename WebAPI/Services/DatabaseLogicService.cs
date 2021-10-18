@@ -156,6 +156,43 @@ namespace JDBWebAPI.Services
         #endregion Tables
 
         #region Rows
+        public int RemoveSameRows(string databaseName, string schemaName, string tableName)
+        {
+            ITable table = GetTable(databaseName, schemaName, tableName);
+
+            List<BaseRow> rowsToDelete = new();
+            table.GetRows()
+                 .ForEach(row =>
+                 {
+                     if (!rowsToDelete.Contains(row))
+                     {
+                         Dictionary<string, string> rowD = row.GetAsDictionary();
+                         table.GetRows()
+                              .Where(rowI => rowI._id != row._id)
+                              .ToList()
+                              .ForEach(rowI =>
+                              {
+                                  foreach (var rowDitem in rowD)
+                                  {
+                                      if (rowDitem.Key == "_id")
+                                      {
+                                          continue;
+                                      }
+                                      if (rowI[rowDitem.Key] != rowDitem.Value)
+                                      {
+                                          return;
+                                      }
+                                  }
+                                  rowsToDelete.Add(rowI);
+                              });
+                     }
+                 });
+
+            table.RemoveRows(rowsToDelete);
+            table.Save();
+            return rowsToDelete.Count;
+        }
+
         public BaseRow CreateRow(string databaseName, string schemaName, string tableName, List<NameValue> row)
         {
             try
