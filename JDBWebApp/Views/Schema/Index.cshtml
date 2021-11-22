@@ -1,0 +1,37 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Schema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewBag.databaseName > Schemas</h1>
+
+<p>
+    <a asp-action="Create">Add New Schema</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Schema name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (string schemaName in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => schemaName)
+                </td>
+                <td>
+                    <a asp-action="Redirect_Table" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Tables</a>
+                    <a asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

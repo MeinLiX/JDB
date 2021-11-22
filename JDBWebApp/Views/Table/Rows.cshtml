@@ -1,0 +1,43 @@
+﻿@model System.Data.DataTable
+
+@{
+    ViewData["Title"] = "Rows";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewBag.databaseName > @ViewBag.schemaName > @ViewBag.tableName > Rows</h1>
+
+<p>
+    <a asp-action="Create">Add New Row</a>
+</p>
+
+<p>
+    <a asp-action="DeleteSameRows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName">Delete same rows</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (System.Data.DataColumn col in Model.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (System.Data.DataRow dataRow in Model.Rows)
+            {
+                <tr>
+                    @foreach (System.Data.DataColumn col in Model.Columns)
+                    {
+                        <td>@dataRow[col.ColumnName].ToString()</td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+

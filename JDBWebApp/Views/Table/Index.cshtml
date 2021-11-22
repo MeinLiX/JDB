@@ -1,0 +1,41 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Table";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewBag.databaseName > @ViewBag.schemaName > Tables</h1>
+
+<p>
+    <a asp-action="Create">Add New Table</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Table name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (string tableName in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => tableName)
+                </td>
+                <td>
+                    <a asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Rows</a>
+                    <a asp-action="Info" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Info</a>
+                    <a asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+

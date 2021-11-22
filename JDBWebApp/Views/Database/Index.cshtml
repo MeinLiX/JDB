@@ -1,0 +1,36 @@
+﻿@model List<string>
+
+@{
+    ViewData["Title"] = "Database";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Database List</h1>
+
+<p>
+    <a asp-action="Create">Add New Database</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (string databaseName in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => databaseName)
+            </td>
+            <td>
+                <a asp-action="Redirect_Schema" asp-route-databaseName="@databaseName">Shemas</a> 
+                <a asp-action="Delete" asp-route-id="@databaseName">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
