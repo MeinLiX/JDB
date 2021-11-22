@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Create Database";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+<h4>Database</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form id="myForm" action="/Database/CreateDatabase" method="Post">
+            <div class="form-group">
+                <label class="control-label">Database name</label>
+                <input type="text" name="databaseName" class="form-control" value="" />
+            </div>
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

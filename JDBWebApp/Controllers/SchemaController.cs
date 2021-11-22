@@ -21,9 +21,22 @@ namespace JDBWebApp.Controllers
             return View(_dbLogic.GetSchemaNames(databaseName));
         }
 
-        public IActionResult SchemaDelete(string databaseName,string schemaName)
+        public IActionResult SchemaDelete(string databaseName, string schemaName)
         {
-            _dbLogic.DeleteSchema(databaseName,schemaName);
+            _dbLogic.DeleteSchema(databaseName, schemaName);
+            return RedirectToAction("Index", "Schema", new { databaseName });
+        }
+
+        public IActionResult CreateSchema(string databaseName)
+        {
+            ViewBag.databaseName = databaseName;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateSchema(string databaseName, string schemaName)
+        {
+            _dbLogic.CreateSchema(databaseName, schemaName);
             return RedirectToAction("Index", "Schema", new { databaseName });
         }
 

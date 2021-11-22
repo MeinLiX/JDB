@@ -25,6 +25,18 @@ namespace JDBWebApp.Controllers
             _dbLogic.DeleteDatabase(databaseName);
             return RedirectToAction("Index", "Database");
         }
+        
+        public IActionResult CreateDatabase()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateDatabase(string databaseName)
+        {
+            _dbLogic.CreateDatabase(databaseName);
+            return RedirectToAction("Index", "Database");
+        }
 
         public IActionResult Redirect_Schema(string databaseName)
         {

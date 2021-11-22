@@ -12,8 +12,9 @@
 </h1>
 
 <p>
-    <a class="btn btn-success" asp-action="Create">Add New Schema</a>
+    <a class="btn btn-success" asp-action="CreateSchema" asp-route-databaseName="@ViewBag.databaseName">Create Schema</a>
 </p>
+
 <table class="table table-striped">
     <thead>
         <tr>
