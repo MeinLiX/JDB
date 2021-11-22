@@ -7,7 +7,7 @@
 <h4>
     <a class="text-secondary" asp-controller="Database" asp-action="index">@ViewBag.databaseName</a>
     /
-    Schemas
+    <a class="text-secondary" asp-controller="Schema" asp-action="index" asp-route-databaseName="@ViewBag.databaseName">Schemas</a>
 </h4>
 <hr />
 <div class="row">

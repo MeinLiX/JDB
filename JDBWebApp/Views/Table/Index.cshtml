@@ -14,7 +14,7 @@
 </h1>
 
 <p>
-    <a class="btn btn-success" asp-action="Create">Add New Table</a>
+    <a class="btn btn-outline-success" asp-action="Create">Add New Table</a>
 </p>
 
 <table class="table table-striped">
@@ -31,10 +31,9 @@
         {
             <tr>
                 <td>
-                    @tableName <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTable(@ViewBag.databaseName, @ViewBag.schemaName, @tableName).GetRows().Count)</span>
+                    <a class="btn btn-outline-dark btn-sm" asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">@tableName</a> <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTable(@ViewBag.databaseName, @ViewBag.schemaName, @tableName).GetRows().Count)</span>
                 </td>
                 <td>
-                    <a class="btn btn-primary" asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Rows</a>
                     <a class="btn btn-danger" asp-action="TableDelete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
                 </td>
             </tr>

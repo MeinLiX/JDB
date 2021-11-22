@@ -12,7 +12,7 @@
 </h1>
 
 <p>
-    <a class="btn btn-success" asp-action="CreateSchema" asp-route-databaseName="@ViewBag.databaseName">Create Schema</a>
+    <a class="btn btn-outline-success" asp-action="CreateSchema" asp-route-databaseName="@ViewBag.databaseName">Create Schema</a>
 </p>
 
 <table class="table table-striped">
@@ -29,10 +29,9 @@
         {
             <tr>
                 <td>
-                    @schemaName <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTableNames(@ViewBag.databaseName,@schemaName).Count)</span>
+                    <a class="btn btn-outline-dark btn-sm" asp-action="Redirect_Table" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">@schemaName</a> <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTableNames(@ViewBag.databaseName,@schemaName).Count)</span>
                 </td>
                 <td>
-                    <a class="btn btn-primary" asp-action="Redirect_Table" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Tables</a>
                     <a class="btn btn-danger" asp-action="SchemaDelete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Delete</a>
                 </td>
             </tr>
