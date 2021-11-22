@@ -35,8 +35,7 @@
                 </td>
                 <td>
                     <a class="btn btn-primary" asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Rows</a>
-                    <a class="btn btn-info" asp-action="Info" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Info</a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
+                    <a class="btn btn-danger" asp-action="TableDelete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
                 </td>
             </tr>
         }

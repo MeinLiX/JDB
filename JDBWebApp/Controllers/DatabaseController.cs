@@ -19,6 +19,12 @@ namespace JDBWebApp.Controllers
             ViewBag.dbLogic = _dbLogic;
             return View(_dbLogic.GetDatabaseNames());
         }
+        
+        public IActionResult DatabaseDelete(string databaseName)
+        {
+            _dbLogic.DeleteDatabase(databaseName);
+            return RedirectToAction("Index", "Database");
+        }
 
         public IActionResult Redirect_Schema(string databaseName)
         {

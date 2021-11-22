@@ -22,11 +22,17 @@ namespace JDBWebApp.Controllers
             ViewBag.schemaName = schemaName;
             return View(_dbLogic.GetTableNames(databaseName, schemaName));
         }
-        
+
+        public IActionResult TableDelete(string databaseName, string schemaName, string tableName)
+        {
+            _dbLogic.DeleteTable(databaseName, schemaName, tableName);
+            return RedirectToAction("Index", "Table", new { databaseName, schemaName });
+        }
+
         public IActionResult DeleteSameRows(string databaseName, string schemaName, string tableName)
         {
             _dbLogic.RemoveSameRows(databaseName, schemaName, tableName);
-            return RedirectToAction("Rows", "Table", new { databaseName, schemaName, tableName }); 
+            return RedirectToAction("Rows", "Table", new { databaseName, schemaName, tableName });
         }
 
         public IActionResult Rows(string databaseName, string schemaName, string tableName)
@@ -58,8 +64,14 @@ namespace JDBWebApp.Controllers
                 dt.Rows.Add(dataRow);
             });
 
-
             return View(dt);
+        }
+
+        public IActionResult RowDelete(string databaseName, string schemaName, string tableName, string rowID)
+        {
+            _dbLogic.DeleteRow(databaseName, schemaName, tableName, rowID);
+
+            return RedirectToAction("Rows", "Table", new { databaseName, schemaName, tableName });
         }
     }
 }

@@ -52,7 +52,7 @@
                     }
                     <td>
                         <a class="btn btn-primary" asp-action="Edit" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName" asp-route-rowID="@dataRow["_id"].ToString()">Edit</a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName" asp-route-rowID="@dataRow["_id"].ToString()">Delete</a>
+                        <a class="btn btn-danger" asp-action="RowDelete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName" asp-route-rowID="@dataRow["_id"].ToString()">Delete</a>
                     </td>
                 </tr>
             }

@@ -75,6 +75,8 @@ namespace JDBWebApp.Services
                 Database database = GetDatabase(databaseName);
 
                 Databases.Remove(database);//TODO (supported by library) TOTAL delete DB  (not local like this)
+                JStream.DeleteDB(database);
+
 
                 return database;
             }
