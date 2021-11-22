@@ -5,24 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewBag.databaseName > @ViewBag.schemaName > @ViewBag.tableName > Rows</h1>
+<h1>
+    <a class="text-secondary" asp-controller="Database" asp-action="index">@ViewBag.databaseName</a>
+    /
+    <a class="text-secondary" asp-controller="Schema" asp-action="index" asp-route-databaseName="@ViewBag.databaseName">@ViewBag.schemaName</a>
+    /
+    <a class="text-secondary" asp-controller="Table" asp-action="index" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName">@ViewBag.tableName</a>
+    /
+    Rows
+</h1>
 
 <p>
-    <a asp-action="Create">Add New Row</a>
+    <a class="btn btn-success" asp-action="Create">Add New Row</a>
+    <a class="btn btn-secondary" asp-action="DeleteSameRows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName">Delete same rows</a>
 </p>
 
-<p>
-    <a asp-action="DeleteSameRows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName">Delete same rows</a>
-</p>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             @foreach (System.Data.DataColumn col in Model.Columns)
             {
                 <th>@col.ColumnName</th>
             }
+            <th></th>
         </tr>
+
     </thead>
     <tbody>
         @{
@@ -31,8 +39,21 @@
                 <tr>
                     @foreach (System.Data.DataColumn col in Model.Columns)
                     {
-                        <td>@dataRow[col.ColumnName].ToString()</td>
+
+                        string row = @dataRow[col.ColumnName].ToString();
+                        if (row != "img")
+                        {
+                            <td>@dataRow[col.ColumnName].ToString()</td>
+                        }
+                        else
+                        {
+                            <td><img src="https://picsum.photos/100" /></td>
+                        }
                     }
+                    <td>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName" asp-route-rowID="@dataRow["_id"].ToString()">Edit</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@ViewBag.tableName" asp-route-rowID="@dataRow["_id"].ToString()">Delete</a>
+                    </td>
                 </tr>
             }
         }

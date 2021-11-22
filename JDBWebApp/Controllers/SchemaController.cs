@@ -16,6 +16,7 @@ namespace JDBWebApp.Controllers
 
         public IActionResult Index(string databaseName)
         {
+            ViewBag.dbLogic = _dbLogic;
             ViewBag.databaseName = databaseName;
             return View(_dbLogic.GetSchemaNames(databaseName));
         }

@@ -5,13 +5,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewBag.databaseName > @ViewBag.schemaName > Tables</h1>
+<h1>
+    <a class="text-secondary" asp-controller="Database" asp-action="index">@ViewBag.databaseName</a>
+    /
+    <a class="text-secondary" asp-controller="Schema" asp-action="index" asp-route-databaseName="@ViewBag.databaseName">@ViewBag.schemaName</a>
+    /
+    Tables
+</h1>
 
 <p>
-    <a asp-action="Create">Add New Table</a>
+    <a class="btn btn-success" asp-action="Create">Add New Table</a>
 </p>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -25,12 +31,12 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => tableName)
+                    @tableName <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTable(@ViewBag.databaseName, @ViewBag.schemaName, @tableName).GetRows().Count)</span>
                 </td>
                 <td>
-                    <a asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Rows</a>
-                    <a asp-action="Info" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Info</a>
-                    <a asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
+                    <a class="btn btn-primary" asp-action="Rows" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Rows</a>
+                    <a class="btn btn-info" asp-action="Info" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Info</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@ViewBag.schemaName" asp-route-tableName="@tableName">Delete</a>
                 </td>
             </tr>
         }

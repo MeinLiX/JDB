@@ -17,20 +17,25 @@ namespace JDBWebApp.Controllers
 
         public IActionResult Index(string databaseName, string schemaName)
         {
+            ViewBag.dbLogic = _dbLogic;
             ViewBag.databaseName = databaseName;
             ViewBag.schemaName = schemaName;
             return View(_dbLogic.GetTableNames(databaseName, schemaName));
         }
+        
+        public IActionResult DeleteSameRows(string databaseName, string schemaName, string tableName)
+        {
+            _dbLogic.RemoveSameRows(databaseName, schemaName, tableName);
+            return RedirectToAction("Rows", "Table", new { databaseName, schemaName, tableName }); 
+        }
 
         public IActionResult Rows(string databaseName, string schemaName, string tableName)
         {
-            ViewBag.dbName = databaseName;
+            ViewBag.databaseName = databaseName;
             ViewBag.schemaName = schemaName;
             ViewBag.tableName = tableName;
 
-            var db = _dbLogic.Databases.First(db => db.GetName() == databaseName);
-            var schema = db.GetSchemas().First(schema => schema.GetName() == schemaName);
-            var table = schema.GetTables().First(table => table.GetName() == tableName);
+            var table = _dbLogic.GetTable(databaseName, schemaName, tableName);
 
             List<string> tableColumnNames = table.GetColumnNames();
             List<JDBSource.Abstracts.BaseRow> tableRows = table.GetRows();

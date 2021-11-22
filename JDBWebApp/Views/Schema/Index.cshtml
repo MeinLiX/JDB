@@ -5,12 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>@ViewBag.databaseName > Schemas</h1>
+<h1>
+    <a class="text-secondary" asp-controller="Database" asp-action="index">@ViewBag.databaseName</a>
+    /
+    Schemas
+</h1>
 
 <p>
-    <a asp-action="Create">Add New Schema</a>
+    <a class="btn btn-success" asp-action="Create">Add New Schema</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -24,11 +28,11 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => schemaName)
+                    @schemaName <span class="badge badge-secondary text-secondary">(@ViewBag.dbLogic.GetTableNames(@ViewBag.databaseName,@schemaName).Count)</span>
                 </td>
                 <td>
-                    <a asp-action="Redirect_Table" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Tables</a>
-                    <a asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Delete</a>
+                    <a class="btn btn-primary" asp-action="Redirect_Table" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Tables</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-databaseName="@ViewBag.databaseName" asp-route-schemaName="@schemaName">Delete</a>
                 </td>
             </tr>
         }
